@@ -1,0 +1,15 @@
+/* Sprout Support Agent — Content Script Styles */
+/* Minimal styles injected into Jira pages */
+
+.sprout-agent-indicator {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  background-color: #16a34a;
+  border-radius: 50%;
+  z-index: 99999;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+  pointer-events: none;
+}
