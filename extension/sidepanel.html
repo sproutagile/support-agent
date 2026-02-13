@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sprout Support Agent — Sidebar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="sp-header">
+      <div class="sp-header__brand">
+        <svg class="sp-header__logo" width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <rect width="28" height="28" rx="6" fill="#16a34a"/>
+          <path d="M8 14.5C8 11.5 10 9 14 8c4 1 6 3.5 6 6.5S18 21 14 22c-4-1-6-3.5-6-7.5z" fill="#fff" opacity="0.9"/>
+          <circle cx="14" cy="11" r="2.5" fill="#fff"/>
+        </svg>
+        <div>
+          <h1 class="sp-header__title">Support Agent</h1>
+          <span class="sp-header__subtitle">Sprout L4 Engineering</span>
+        </div>
+      </div>
+      <div class="sp-header__actions">
+        <button class="sp-icon-btn" id="refreshBtn" title="Refresh data">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
+        <button class="sp-icon-btn" id="settingsBtn" title="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Jira Context Bar -->
+    <div class="sp-context-bar" id="contextBar">
+      <div class="sp-context-bar__ticket">
+        <span class="sp-badge sp-badge--primary" id="ticketKey">EAB-1542</span>
+        <span class="sp-context-bar__summary" id="ticketSummary">SSO login fails intermittently after IdP migration</span>
+      </div>
+      <span class="sp-badge sp-badge--warning" id="ticketPriority">P2</span>
+    </div>
+
+    <!-- Tab Navigation -->
+    <nav class="sp-tabs">
+      <button class="sp-tab sp-tab--active" data-tab="dashboard">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        Dashboard
+      </button>
+      <button class="sp-tab" data-tab="investigate">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        Investigate
+      </button>
+      <button class="sp-tab" data-tab="ai">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a4 4 0 0 1 4 4v1h1a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-1v1a4 4 0 0 1-8 0v-1H7a3 3 0 0 1-3-3v-1a3 3 0 0 1 3-3h1V6a4 4 0 0 1 4-4z"></path>
+          <circle cx="9" cy="10" r="1"></circle>
+          <circle cx="15" cy="10" r="1"></circle>
+          <path d="M9.5 14a3.5 3.5 0 0 0 5 0"></path>
+        </svg>
+        AI
+      </button>
+      <button class="sp-tab" data-tab="faq">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        FAQ
+      </button>
+    </nav>
+
+    <!-- Tab Panels -->
+    <main class="sp-main">
+
+      <!-- ==================== DASHBOARD TAB ==================== -->
+      <div class="sp-panel sp-panel--active" id="panel-dashboard">
+
+        <!-- Date Range Selector -->
+        <div class="sp-toolbar">
+          <div class="sp-select-group">
+            <label class="sp-label">Period</label>
+            <select class="sp-select" id="dateRange">
+              <option value="7d">Last 7 days</option>
+              <option value="30d" selected>Last 30 days</option>
+              <option value="90d">Last 90 days</option>
+            </select>
+          </div>
+          <div class="sp-select-group">
+            <label class="sp-label">Priority</label>
+            <select class="sp-select" id="priorityFilter">
+              <option value="all" selected>All Priorities</option>
+              <option value="P1">P1 — Critical</option>
+              <option value="P2">P2 — High</option>
+              <option value="P3">P3 — Medium</option>
+              <option value="P4">P4 — Low</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Metric Cards Row 1 -->
+        <div class="sp-metrics-grid">
+          <div class="sp-metric-card">
+            <div class="sp-metric-card__header">
+              <span class="sp-metric-card__label">Velocity</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <div class="sp-metric-card__value">12.5</div>
+            <div class="sp-metric-card__change sp-metric-card__change--up">+8.7% vs last period</div>
+          </div>
+          <div class="sp-metric-card">
+            <div class="sp-metric-card__header">
+              <span class="sp-metric-card__label">Lead Time</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            </div>
+            <div class="sp-metric-card__value">4.2d</div>
+            <div class="sp-metric-card__change sp-metric-card__change--down">-12.5% vs last period</div>
+          </div>
+          <div class="sp-metric-card">
+            <div class="sp-metric-card__header">
+              <span class="sp-metric-card__label">Cycle Time</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            </div>
+            <div class="sp-metric-card__value">2.8d</div>
+            <div class="sp-metric-card__change sp-metric-card__change--down">-5.3% vs last period</div>
+          </div>
+        </div>
+
+        <!-- Ticket Trend Chart -->
+        <div class="sp-card">
+          <div class="sp-card__header">
+            <h3 class="sp-card__title">Created Ticket Trend</h3>
+            <span class="sp-badge sp-badge--neutral">Per Priority</span>
+          </div>
+          <div class="sp-chart" id="trendChart">
+            <!-- Bar Chart Visualization -->
+            <div class="sp-bar-chart">
+              <div class="sp-bar-chart__y-axis">
+                <span>15</span><span>10</span><span>5</span><span>0</span>
+              </div>
+              <div class="sp-bar-chart__content">
+                <div class="sp-bar-group">
+                  <div class="sp-bar-stack">
+                    <div class="sp-bar sp-bar--p1" style="height: 13%;" title="P1: 2"></div>
+                    <div class="sp-bar sp-bar--p2" style="height: 33%;" title="P2: 5"></div>
+                    <div class="sp-bar sp-bar--p3" style="height: 80%;" title="P3: 12"></div>
+                    <div class="sp-bar sp-bar--p4" style="height: 53%;" title="P4: 8"></div>
+                  </div>
+                  <span class="sp-bar-label">Week 1</span>
+                </div>
+                <div class="sp-bar-group">
+                  <div class="sp-bar-stack">
+                    <div class="sp-bar sp-bar--p1" style="height: 7%;" title="P1: 1"></div>
+                    <div class="sp-bar sp-bar--p2" style="height: 53%;" title="P2: 8"></div>
+                    <div class="sp-bar sp-bar--p3" style="height: 67%;" title="P3: 10"></div>
+                    <div class="sp-bar sp-bar--p4" style="height: 40%;" title="P4: 6"></div>
+                  </div>
+                  <span class="sp-bar-label">Week 2</span>
+                </div>
+                <div class="sp-bar-group">
+                  <div class="sp-bar-stack">
+                    <div class="sp-bar sp-bar--p1" style="height: 20%;" title="P1: 3"></div>
+                    <div class="sp-bar sp-bar--p2" style="height: 27%;" title="P2: 4"></div>
+                    <div class="sp-bar sp-bar--p3" style="height: 100%;" title="P3: 15"></div>
+                    <div class="sp-bar sp-bar--p4" style="height: 60%;" title="P4: 9"></div>
+                  </div>
+                  <span class="sp-bar-label">Week 3</span>
+                </div>
+                <div class="sp-bar-group">
+                  <div class="sp-bar-stack">
+                    <div class="sp-bar sp-bar--p1" style="height: 7%;" title="P1: 1"></div>
+                    <div class="sp-bar sp-bar--p2" style="height: 40%;" title="P2: 6"></div>
+                    <div class="sp-bar sp-bar--p3" style="height: 73%;" title="P3: 11"></div>
+                    <div class="sp-bar sp-bar--p4" style="height: 47%;" title="P4: 7"></div>
+                  </div>
+                  <span class="sp-bar-label">Week 4</span>
+                </div>
+              </div>
+            </div>
+            <div class="sp-chart-legend">
+              <span class="sp-legend-item"><span class="sp-legend-dot sp-legend-dot--p1"></span>P1</span>
+              <span class="sp-legend-item"><span class="sp-legend-dot sp-legend-dot--p2"></span>P2</span>
+              <span class="sp-legend-item"><span class="sp-legend-dot sp-legend-dot--p3"></span>P3</span>
+              <span class="sp-legend-item"><span class="sp-legend-dot sp-legend-dot--p4"></span>P4</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resolution Cards -->
+        <div class="sp-metrics-grid sp-metrics-grid--2col">
+          <div class="sp-card sp-card--compact">
+            <div class="sp-card__header">
+              <h3 class="sp-card__title">Resolved Tickets</h3>
+            </div>
+            <div class="sp-resolution-split">
+              <div class="sp-resolution-item">
+                <span class="sp-resolution-item__value">34</span>
+                <span class="sp-resolution-item__label">Internal Support</span>
+                <div class="sp-progress-bar">
+                  <div class="sp-progress-bar__fill sp-progress-bar__fill--green" style="width: 65%"></div>
+                </div>
+              </div>
+              <div class="sp-resolution-item">
+                <span class="sp-resolution-item__value">18</span>
+                <span class="sp-resolution-item__label">Delivery Teams</span>
+                <div class="sp-progress-bar">
+                  <div class="sp-progress-bar__fill sp-progress-bar__fill--blue" style="width: 35%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="sp-card sp-card--compact">
+            <div class="sp-card__header">
+              <h3 class="sp-card__title">Escalated Tickets</h3>
+            </div>
+            <div class="sp-escalation-stat">
+              <span class="sp-escalation-stat__value">7</span>
+              <span class="sp-escalation-stat__label">tickets escalated this period</span>
+              <div class="sp-escalation-stat__bar">
+                <div class="sp-progress-bar">
+                  <div class="sp-progress-bar__fill sp-progress-bar__fill--orange" style="width: 13%"></div>
+                </div>
+                <span class="sp-escalation-stat__pct">13.5% of total</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== INVESTIGATE TAB ==================== -->
+      <div class="sp-panel" id="panel-investigate">
+
+        <!-- Search -->
+        <div class="sp-search-bar">
+          <svg class="sp-search-bar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input class="sp-search-bar__input" type="text" placeholder="Search related tickets, keywords, or paste a ticket key..." id="searchInput" />
+        </div>
+
+        <!-- Escalation Advisor -->
+        <div class="sp-advisor-card">
+          <div class="sp-advisor-card__header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+            <span class="sp-advisor-card__title">Escalation Advisor</span>
+          </div>
+          <div class="sp-advisor-card__body">
+            <div class="sp-advisor-confidence">
+              <span class="sp-advisor-confidence__label">Dev Assignment Need:</span>
+              <span class="sp-badge sp-badge--warning">Medium</span>
+            </div>
+            <p class="sp-advisor-card__text">
+              2 similar tickets found with workarounds. Consider trying known resolution before escalating to dev.
+            </p>
+          </div>
+        </div>
+
+        <!-- Related Tickets -->
+        <div class="sp-section-header">
+          <h3 class="sp-section-title">Related Tickets</h3>
+          <span class="sp-badge sp-badge--neutral">3 found</span>
+        </div>
+
+        <div class="sp-ticket-list">
+          <!-- Ticket 1 -->
+          <div class="sp-ticket-card">
+            <div class="sp-ticket-card__header">
+              <div class="sp-ticket-card__key-row">
+                <span class="sp-badge sp-badge--primary">EAB-1234</span>
+                <span class="sp-similarity-badge">92% match</span>
+              </div>
+              <div class="sp-ticket-card__meta">
+                <span class="sp-badge sp-badge--success">Resolved</span>
+                <span class="sp-badge sp-badge--warning-outline">P2</span>
+              </div>
+            </div>
+            <p class="sp-ticket-card__summary">SSO login fails after password reset</p>
+            <div class="sp-ticket-card__workaround">
+              <div class="sp-workaround-header">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span>Workaround Available</span>
+              </div>
+              <p class="sp-workaround-text">Clear browser cache and re-authenticate via IdP portal. If persistent, re-sync user attributes.</p>
+              <button class="sp-btn sp-btn--ghost sp-btn--sm copy-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Ticket 2 -->
+          <div class="sp-ticket-card">
+            <div class="sp-ticket-card__header">
+              <div class="sp-ticket-card__key-row">
+                <span class="sp-badge sp-badge--primary">EAB-1180</span>
+                <span class="sp-similarity-badge">85% match</span>
+              </div>
+              <div class="sp-ticket-card__meta">
+                <span class="sp-badge sp-badge--success">Resolved</span>
+                <span class="sp-badge sp-badge--danger-outline">P1</span>
+              </div>
+            </div>
+            <p class="sp-ticket-card__summary">SSO attribute mismatch causing auth loop</p>
+            <div class="sp-ticket-card__workaround">
+              <div class="sp-workaround-header">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span>Workaround Available</span>
+              </div>
+              <p class="sp-workaround-text">Verify SAML attributes mapping in Azure AD. Check NameID format matches expected value.</p>
+              <button class="sp-btn sp-btn--ghost sp-btn--sm copy-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <!-- Ticket 3 -->
+          <div class="sp-ticket-card">
+            <div class="sp-ticket-card__header">
+              <div class="sp-ticket-card__key-row">
+                <span class="sp-badge sp-badge--primary">EAB-1156</span>
+                <span class="sp-similarity-badge">78% match</span>
+              </div>
+              <div class="sp-ticket-card__meta">
+                <span class="sp-badge sp-badge--info">In Progress</span>
+                <span class="sp-badge sp-badge--warning-outline">P2</span>
+              </div>
+            </div>
+            <p class="sp-ticket-card__summary">User unable to access after SSO migration</p>
+            <div class="sp-ticket-card__no-workaround">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+              <span>No workaround yet — investigation in progress</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Issue Trends -->
+        <div class="sp-section-header" style="margin-top: 16px;">
+          <h3 class="sp-section-title">Issue Trends (30 days)</h3>
+        </div>
+        <div class="sp-trends-list">
+          <div class="sp-trend-item">
+            <span class="sp-trend-item__rank">1</span>
+            <div class="sp-trend-item__content">
+              <span class="sp-trend-item__name">SSO Authentication Issues</span>
+              <div class="sp-progress-bar sp-progress-bar--sm">
+                <div class="sp-progress-bar__fill sp-progress-bar__fill--green" style="width: 85%"></div>
+              </div>
+            </div>
+            <span class="sp-trend-item__count">17 tickets</span>
+          </div>
+          <div class="sp-trend-item">
+            <span class="sp-trend-item__rank">2</span>
+            <div class="sp-trend-item__content">
+              <span class="sp-trend-item__name">Data Sync Failures</span>
+              <div class="sp-progress-bar sp-progress-bar--sm">
+                <div class="sp-progress-bar__fill sp-progress-bar__fill--blue" style="width: 60%"></div>
+              </div>
+            </div>
+            <span class="sp-trend-item__count">12 tickets</span>
+          </div>
+          <div class="sp-trend-item">
+            <span class="sp-trend-item__rank">3</span>
+            <div class="sp-trend-item__content">
+              <span class="sp-trend-item__name">Biometric Integration Errors</span>
+              <div class="sp-progress-bar sp-progress-bar--sm">
+                <div class="sp-progress-bar__fill sp-progress-bar__fill--orange" style="width: 40%"></div>
+              </div>
+            </div>
+            <span class="sp-trend-item__count">8 tickets</span>
+          </div>
+          <div class="sp-trend-item">
+            <span class="sp-trend-item__rank">4</span>
+            <div class="sp-trend-item__content">
+              <span class="sp-trend-item__name">HR-PR Linking Issues</span>
+              <div class="sp-progress-bar sp-progress-bar--sm">
+                <div class="sp-progress-bar__fill sp-progress-bar__fill--purple" style="width: 30%"></div>
+              </div>
+            </div>
+            <span class="sp-trend-item__count">6 tickets</span>
+          </div>
+          <div class="sp-trend-item">
+            <span class="sp-trend-item__rank">5</span>
+            <div class="sp-trend-item__content">
+              <span class="sp-trend-item__name">Account Provisioning Delays</span>
+              <div class="sp-progress-bar sp-progress-bar--sm">
+                <div class="sp-progress-bar__fill sp-progress-bar__fill--gray" style="width: 20%"></div>
+              </div>
+            </div>
+            <span class="sp-trend-item__count">4 tickets</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== AI INVESTIGATE TAB ==================== -->
+      <div class="sp-panel" id="panel-ai">
+        <div class="sp-ai-container">
+
+          <!-- Chat Messages -->
+          <div class="sp-ai-messages" id="aiMessages">
+
+            <!-- Welcome Message -->
+            <div class="sp-ai-msg sp-ai-msg--assistant">
+              <div class="sp-ai-msg__avatar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a4 4 0 0 1 4 4v1h1a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-1v1a4 4 0 0 1-8 0v-1H7a3 3 0 0 1-3-3v-1a3 3 0 0 1 3-3h1V6a4 4 0 0 1 4-4z"></path>
+                </svg>
+              </div>
+              <div class="sp-ai-msg__content">
+                <div class="sp-ai-msg__name">Sprout AI</div>
+                <div class="sp-ai-msg__text">
+                  Hi! I'm your AI investigation assistant. I can help you analyze EAB tickets by:
+                  <ul class="sp-ai-msg__list">
+                    <li>Identifying <strong>root causes</strong> from historical ticket patterns</li>
+                    <li>Suggesting <strong>workarounds</strong> from resolved similar tickets</li>
+                    <li>Recommending whether to <strong>escalate to dev</strong> or resolve with known fixes</li>
+                  </ul>
+                  Try asking me about the current ticket, or paste any EAB ticket key to analyze.
+                </div>
+                <div class="sp-ai-quick-actions">
+                  <button class="sp-ai-quick-btn" data-prompt="Analyze the current ticket EAB-1542">Analyze current ticket</button>
+                  <button class="sp-ai-quick-btn" data-prompt="What is the root cause of this SSO failure?">Root cause analysis</button>
+                  <button class="sp-ai-quick-btn" data-prompt="Show me workarounds for this issue">Find workarounds</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sample User Message -->
+            <div class="sp-ai-msg sp-ai-msg--user">
+              <div class="sp-ai-msg__content">
+                <div class="sp-ai-msg__text">Analyze EAB-1542 — SSO login fails intermittently after IdP migration</div>
+              </div>
+            </div>
+
+            <!-- Sample AI Response -->
+            <div class="sp-ai-msg sp-ai-msg--assistant">
+              <div class="sp-ai-msg__avatar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2a4 4 0 0 1 4 4v1h1a3 3 0 0 1 3 3v1a3 3 0 0 1-3 3h-1v1a4 4 0 0 1-8 0v-1H7a3 3 0 0 1-3-3v-1a3 3 0 0 1 3-3h1V6a4 4 0 0 1 4-4z"></path>
+                </svg>
+              </div>
+              <div class="sp-ai-msg__content">
+                <div class="sp-ai-msg__name">Sprout AI</div>
+                <div class="sp-ai-msg__text">
+
+                  <div class="sp-ai-analysis">
+                    <div class="sp-ai-analysis__section">
+                      <div class="sp-ai-analysis__header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                        <strong>Root Cause Analysis</strong>
+                        <span class="sp-ai-confidence sp-ai-confidence--high">High confidence</span>
+                      </div>
+                      <p>Based on analysis of <strong>3 related tickets</strong> (EAB-1234, EAB-1180, EAB-1156), this appears to be a <strong>SAML attribute mapping mismatch</strong> introduced during the IdP migration. The NameID format changed from <code>email</code> to <code>persistent</code> identifier, but the Sprout SP was not updated to accept the new format.</p>
+                      <div class="sp-ai-evidence">
+                        <span class="sp-ai-evidence__label">Evidence from:</span>
+                        <span class="sp-badge sp-badge--primary">EAB-1234</span>
+                        <span class="sp-badge sp-badge--primary">EAB-1180</span>
+                        <span class="sp-similarity-badge">92% similar</span>
+                      </div>
+                    </div>
+
+                    <div class="sp-ai-analysis__section">
+                      <div class="sp-ai-analysis__header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        <strong>Suggested Workarounds</strong>
+                      </div>
+                      <ol class="sp-ai-workaround-list">
+                        <li>
+                          <strong>Update SAML NameID format</strong> — In Azure AD Enterprise App, change NameID format to <code>emailAddress</code> to match Sprout SP expectations.
+                          <span class="sp-ai-confidence sp-ai-confidence--high">Resolved EAB-1234</span>
+                        </li>
+                        <li>
+                          <strong>Re-sync user attributes</strong> — Trigger a full attribute sync from the new IdP to ensure all user profiles have updated SAML claims.
+                          <span class="sp-ai-confidence sp-ai-confidence--medium">Resolved EAB-1180</span>
+                        </li>
+                        <li>
+                          <strong>Clear SP session cache</strong> — Clear browser cache and Sprout session tokens; intermittent failures may be caused by stale cached SAML assertions.
+                        </li>
+                      </ol>
+                    </div>
+
+                    <div class="sp-ai-analysis__section">
+                      <div class="sp-ai-analysis__header">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                        <strong>Escalation Recommendation</strong>
+                      </div>
+                      <div class="sp-ai-escalation">
+                        <span class="sp-badge sp-badge--success">Try workaround first</span>
+                        <p>Workaround #1 has resolved 2 similar tickets. Recommend trying the NameID format fix before escalating to dev. If the issue persists after applying workarounds 1 and 2, escalate with SAML trace logs attached.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Feedback -->
+                <div class="sp-ai-feedback">
+                  <span class="sp-ai-feedback__label">Was this helpful?</span>
+                  <button class="sp-ai-feedback__btn sp-ai-feedback__btn--up" title="Helpful">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+                  </button>
+                  <button class="sp-ai-feedback__btn sp-ai-feedback__btn--down" title="Not helpful">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input -->
+          <div class="sp-ai-input-area">
+            <div class="sp-ai-input-wrapper">
+              <input class="sp-ai-input" type="text" placeholder="Ask about a ticket, root cause, or workaround..." id="aiInput" />
+              <button class="sp-ai-send-btn" id="aiSendBtn" title="Send">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </div>
+            <div class="sp-ai-input-hint">
+              Powered by Azure OpenAI &middot; Responses grounded in EAB ticket data
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== FAQ & TOOLS TAB ==================== -->
+      <div class="sp-panel" id="panel-faq">
+
+        <!-- Search -->
+        <div class="sp-search-bar">
+          <svg class="sp-search-bar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input class="sp-search-bar__input" type="text" placeholder="Search FAQs, processes, or tools..." id="faqSearchInput" />
+        </div>
+
+        <!-- Quick Tools -->
+        <div class="sp-section-header">
+          <h3 class="sp-section-title">Quick Tools</h3>
+        </div>
+        <div class="sp-tools-grid">
+          <button class="sp-tool-card" id="caToolBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            <span class="sp-tool-card__label">CA Tool</span>
+            <span class="sp-tool-card__desc">Customer Advocacy</span>
+          </button>
+          <button class="sp-tool-card" id="ssoInvBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span class="sp-tool-card__label">SSO Investigation</span>
+            <span class="sp-tool-card__desc">Quick diagnostic</span>
+          </button>
+          <button class="sp-tool-card" id="syncToolBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            <span class="sp-tool-card__label">Full Sync</span>
+            <span class="sp-tool-card__desc">Process checker</span>
+          </button>
+        </div>
+
+        <!-- SSO Quick Investigation Panel -->
+        <div class="sp-card sp-card--highlighted" id="ssoInvestPanel" style="display: none;">
+          <div class="sp-card__header">
+            <h3 class="sp-card__title">Quick SSO Investigation</h3>
+            <button class="sp-icon-btn sp-icon-btn--sm" id="closeSsoPanel">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+          <div class="sp-checklist">
+            <label class="sp-checklist__item">
+              <input type="checkbox" class="sp-checkbox" />
+              <span>Check if SSO certificate has expired</span>
+            </label>
+            <label class="sp-checklist__item">
+              <input type="checkbox" class="sp-checkbox" />
+              <span>Verify SAML attributes are correctly mapped</span>
+            </label>
+            <label class="sp-checklist__item">
+              <input type="checkbox" class="sp-checkbox" />
+              <span>Check if user attributes were uploaded successfully</span>
+            </label>
+            <label class="sp-checklist__item">
+              <input type="checkbox" class="sp-checkbox" />
+              <span>Verify NameID format matches (email vs UPN)</span>
+            </label>
+            <label class="sp-checklist__item">
+              <input type="checkbox" class="sp-checkbox" />
+              <span>Check Azure AD Enterprise App assignment</span>
+            </label>
+            <label class="sp-checklist__item">
+              <input type="checkbox" class="sp-checkbox" />
+              <span>Review IdP login logs for error codes</span>
+            </label>
+            <label class="sp-checklist__item">
+              <input type="checkbox" class="sp-checkbox" />
+              <span>Test with a different browser / incognito</span>
+            </label>
+          </div>
+          <div class="sp-card__footer">
+            <span class="sp-text--muted">If issue persists after checklist, escalate to dev with logs attached.</span>
+          </div>
+        </div>
+
+        <!-- FAQ Accordion -->
+        <div class="sp-section-header">
+          <h3 class="sp-section-title">Process FAQs</h3>
+        </div>
+
+        <div class="sp-accordion" id="faqAccordion">
+          <!-- FAQ 1: HR-PR Linking -->
+          <div class="sp-accordion__item">
+            <button class="sp-accordion__trigger">
+              <div class="sp-accordion__trigger-content">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                <span>HR-PR Linking (with SSO)</span>
+              </div>
+              <svg class="sp-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="sp-accordion__content">
+              <div class="sp-faq-steps">
+                <div class="sp-step">
+                  <span class="sp-step__number">1</span>
+                  <div class="sp-step__content">
+                    <strong>Verify HR Module Setup</strong>
+                    <p>Ensure the HR module is properly configured with company structure, departments, and positions.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">2</span>
+                  <div class="sp-step__content">
+                    <strong>Link PR Employee Records</strong>
+                    <p>Map each payroll employee record to the corresponding HR record using the employee ID or email as the key identifier.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">3</span>
+                  <div class="sp-step__content">
+                    <strong>Configure SSO Integration</strong>
+                    <p>Set up Azure AD SSO for the linked accounts. Ensure SAML assertions include both HR and PR identifiers.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">4</span>
+                  <div class="sp-step__content">
+                    <strong>Test & Validate</strong>
+                    <p>Log in via SSO and verify both HR and PR data is accessible. Check audit logs for any mapping errors.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 2: SSO Inquiries -->
+          <div class="sp-accordion__item">
+            <button class="sp-accordion__trigger">
+              <div class="sp-accordion__trigger-content">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>SSO Inquiries</span>
+              </div>
+              <svg class="sp-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="sp-accordion__content">
+              <div class="sp-faq-steps">
+                <div class="sp-step">
+                  <span class="sp-step__number">1</span>
+                  <div class="sp-step__content">
+                    <strong>Identify SSO Provider</strong>
+                    <p>Confirm whether the client uses Azure AD, Okta, Google Workspace, or another IdP.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">2</span>
+                  <div class="sp-step__content">
+                    <strong>Common Issues Checklist</strong>
+                    <p>Certificate expiration, incorrect ACS URL, mismatched entity ID, attribute mapping errors, user not assigned to enterprise app.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">3</span>
+                  <div class="sp-step__content">
+                    <strong>When to Escalate</strong>
+                    <p>Escalate if: multi-tenant SSO, custom SCIM provisioning, or IdP-side changes required that client cannot perform.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 3: Biometric Device Troubleshooting -->
+          <div class="sp-accordion__item">
+            <button class="sp-accordion__trigger">
+              <div class="sp-accordion__trigger-content">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                <span>Biometric Device Troubleshooting</span>
+              </div>
+              <svg class="sp-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="sp-accordion__content">
+              <div class="sp-decision-tree">
+                <div class="sp-decision">
+                  <span class="sp-decision__q">Is the device powered on and connected to the network?</span>
+                  <div class="sp-decision__branches">
+                    <div class="sp-decision__branch sp-decision__branch--yes">
+                      <strong>Yes:</strong> Check if device firmware is up to date. Try restarting the device.
+                    </div>
+                    <div class="sp-decision__branch sp-decision__branch--no">
+                      <strong>No:</strong> <span class="sp-text--supplier">Coordinate with supplier</span> for hardware/connectivity issues.
+                    </div>
+                  </div>
+                </div>
+                <div class="sp-decision">
+                  <span class="sp-decision__q">Can the device communicate with the server?</span>
+                  <div class="sp-decision__branches">
+                    <div class="sp-decision__branch sp-decision__branch--yes">
+                      <strong>Yes:</strong> Check employee enrollment status and biometric template sync.
+                    </div>
+                    <div class="sp-decision__branch sp-decision__branch--no">
+                      <strong>No:</strong> Check firewall rules, API endpoint, and <span class="sp-text--supplier">coordinate with supplier</span> if port/protocol issues.
+                    </div>
+                  </div>
+                </div>
+                <div class="sp-info-box sp-info-box--warning">
+                  <strong>When to coordinate with supplier:</strong> Hardware failures, firmware upgrades, physical installation, network module replacement, SDK/driver issues.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 4: New Account Setup -->
+          <div class="sp-accordion__item">
+            <button class="sp-accordion__trigger">
+              <div class="sp-accordion__trigger-content">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>New Account Setup (Prod / Sandbox)</span>
+              </div>
+              <svg class="sp-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="sp-accordion__content">
+              <div class="sp-faq-steps">
+                <div class="sp-step">
+                  <span class="sp-step__number">1</span>
+                  <div class="sp-step__content">
+                    <strong>Gather Requirements</strong>
+                    <p>Client name, environment type (Production / Sandbox), module list, expected user count, region/timezone.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">2</span>
+                  <div class="sp-step__content">
+                    <strong>Provision Environment</strong>
+                    <p>Create tenant in Azure. Configure database, storage, and initial admin credentials. For sandbox: use template with sample data.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">3</span>
+                  <div class="sp-step__content">
+                    <strong>Configure Modules</strong>
+                    <p>Enable requested modules (HR, Payroll, Time, etc.). Set company structure, pay schedules, and compliance rules.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">4</span>
+                  <div class="sp-step__content">
+                    <strong>Handover</strong>
+                    <p>Send credentials to client admin. Schedule onboarding walkthrough. Document any custom configurations.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 5: Full Sync Process -->
+          <div class="sp-accordion__item">
+            <button class="sp-accordion__trigger">
+              <div class="sp-accordion__trigger-content">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                <span>Full Sync Process (Pre-Mig to SSO Sched)</span>
+              </div>
+              <svg class="sp-accordion__chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="sp-accordion__content">
+              <div class="sp-faq-steps">
+                <div class="sp-step">
+                  <span class="sp-step__number">1</span>
+                  <div class="sp-step__content">
+                    <strong>Pre-Migration Preparation</strong>
+                    <p>Export data from legacy system. Validate data format and completeness. Map fields to Sprout schema. Run pre-migration validation script.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">2</span>
+                  <div class="sp-step__content">
+                    <strong>Data Import</strong>
+                    <p>Import employee master data, pay history, leave balances, and time records. Run delta checks against source data.</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">3</span>
+                  <div class="sp-step__content">
+                    <strong>Full Sync Execution</strong>
+                    <p>Trigger full synchronization job. Monitor sync progress in admin dashboard. Resolve any sync errors (duplicates, format mismatches, missing references).</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">4</span>
+                  <div class="sp-step__content">
+                    <strong>Post-Sync Validation</strong>
+                    <p>Compare record counts (source vs. destination). Spot-check 10% of records. Verify computed fields (tax, benefits, leave accruals).</p>
+                  </div>
+                </div>
+                <div class="sp-step">
+                  <span class="sp-step__number">5</span>
+                  <div class="sp-step__content">
+                    <strong>SSO Scheduling</strong>
+                    <p>Coordinate SSO cutover date with client IT. Configure Azure AD enterprise app. Schedule go-live window (ideally off-hours). Send SSO test instructions to pilot group.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== SETTINGS PANEL (overlay) ==================== -->
+      <div class="sp-settings-overlay" id="settingsOverlay" style="display: none;">
+        <div class="sp-settings-panel">
+          <div class="sp-settings-panel__header">
+            <h3>Settings</h3>
+            <button class="sp-icon-btn sp-icon-btn--sm" id="closeSettings">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+          <div class="sp-settings-panel__body">
+            <div class="sp-form-group">
+              <label class="sp-label">Jira Instance URL</label>
+              <input class="sp-input" type="text" placeholder="https://your-company.atlassian.net" />
+            </div>
+            <div class="sp-form-group">
+              <label class="sp-label">Jira API Token</label>
+              <input class="sp-input" type="password" placeholder="Enter your Jira API token" />
+            </div>
+            <div class="sp-form-group">
+              <label class="sp-label">EAB Project Key</label>
+              <input class="sp-input" type="text" value="EAB" />
+            </div>
+            <div class="sp-form-group">
+              <label class="sp-label">Data Refresh Interval</label>
+              <select class="sp-select">
+                <option>Every 5 minutes</option>
+                <option selected>Every 15 minutes</option>
+                <option>Every 30 minutes</option>
+                <option>Every hour</option>
+              </select>
+            </div>
+            <div class="sp-form-group">
+              <label class="sp-label">Azure AD</label>
+              <button class="sp-btn sp-btn--outline">Connect with Microsoft</button>
+            </div>
+            <div class="sp-settings-panel__footer">
+              <button class="sp-btn sp-btn--ghost" id="cancelSettings">Cancel</button>
+              <button class="sp-btn sp-btn--primary" id="saveSettings">Save Settings</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

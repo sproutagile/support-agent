@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprout Support Agent — Product Requirements Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sprout-green: #16a34a;
+      --sprout-green-dark: #15803d;
+      --sprout-green-light: #22c55e;
+      --sprout-green-muted: #dcfce7;
+      --ai-purple: #8b5cf6;
+      --ai-purple-dark: #7c3aed;
+      --ai-purple-muted: #ede9fe;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --white: #ffffff;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow: 0 1px 3px rgba(0,0,0,0.1);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--gray-700);
+      background: var(--gray-50);
+      padding-top: 72px;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0.75rem 1.5rem;
+      z-index: 1000;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--sprout-green);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      padding: 0.375rem 0.75rem;
+      border-radius: var(--radius);
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--sprout-green);
+      background: var(--sprout-green-muted);
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--sprout-green) 0%, var(--sprout-green-dark) 100%);
+      color: var(--white);
+      padding: 3rem 1.5rem 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.025em;
+    }
+
+    .hero-subtitle {
+      font-size: 1.125rem;
+      opacity: 0.95;
+      max-width: 720px;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      font-size: 0.875rem;
+      opacity: 0.9;
+    }
+
+    .hero-meta span {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .hero-meta strong {
+      font-weight: 600;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 3rem;
+    }
+
+    section[id] {
+      scroll-margin-top: 80px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--sprout-green);
+      display: inline-block;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--gray-900);
+      margin: 1.5rem 0 0.75rem;
+    }
+
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin: 1rem 0 0.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--gray-700);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--gray-200);
+      margin-bottom: 1rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .card-pain {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--sprout-green);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card-pain:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-pain h4 {
+      color: var(--sprout-green);
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .kpi-card {
+      background: linear-gradient(135deg, var(--sprout-green-muted) 0%, var(--white) 100%);
+      border: 1px solid var(--sprout-green);
+      border-radius: var(--radius-lg);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--sprout-green);
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      color: var(--gray-600);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    th {
+      background: var(--sprout-green);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: var(--gray-50);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-p1 {
+      background: var(--sprout-green-muted);
+      color: var(--sprout-green);
+    }
+
+    .badge-new {
+      background: var(--ai-purple-muted);
+      color: var(--ai-purple);
+    }
+
+    .badge-high {
+      background: #fef2f2;
+      color: #dc2626;
+    }
+
+    .badge-medium {
+      background: #fffbeb;
+      color: #d97706;
+    }
+
+    .badge-low {
+      background: #f0fdf4;
+      color: var(--sprout-green);
+    }
+
+    /* AI Section - Purple accent */
+    .ai-section {
+      background: linear-gradient(180deg, var(--ai-purple-muted) 0%, var(--white) 100%);
+      border: 1px solid var(--ai-purple);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .ai-section h3 {
+      color: var(--ai-purple);
+    }
+
+    .ai-highlight {
+      background: var(--white);
+      border: 2px solid var(--ai-purple);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .ai-highlight h4 {
+      color: var(--ai-purple);
+      margin-top: 0;
+    }
+
+    .rag-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin: 1rem 0;
+      padding: 1rem;
+      background: var(--gray-50);
+      border-radius: var(--radius);
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+
+    .rag-step {
+      background: var(--ai-purple-muted);
+      color: var(--ai-purple-dark);
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+    }
+
+    .rag-arrow {
+      color: var(--ai-purple);
+      font-weight: bold;
+    }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+
+    .checklist li {
+      padding: 0.5rem 0;
+      padding-left: 1.75rem;
+      position: relative;
+    }
+
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: var(--sprout-green);
+    }
+
+    .checklist li.done::before {
+      content: "☑";
+    }
+
+    /* Tree view */
+    .tree {
+      font-family: monospace;
+      font-size: 0.9rem;
+      background: var(--white);
+      padding: 1.25rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      line-height: 1.8;
+    }
+
+    .tree-item {
+      padding-left: 1rem;
+      border-left: 2px solid var(--gray-200);
+      margin-left: 0.5rem;
+    }
+
+    .tree-item.new {
+      border-left-color: var(--ai-purple);
+      color: var(--ai-purple);
+    }
+
+    /* ASCII diagram */
+    .ascii-diagram {
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.8rem;
+      background: var(--gray-900);
+      color: #10b981;
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.4;
+    }
+
+    /* Data flows */
+    .flow-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      border: 1px solid var(--gray-200);
+      margin-bottom: 1rem;
+    }
+
+    .flow-card h4 {
+      color: var(--sprout-green);
+      margin-top: 0;
+    }
+
+    .flow-card.ai h4 {
+      color: var(--ai-purple);
+    }
+
+    /* Risk cards */
+    .risk-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      border: 1px solid var(--gray-200);
+      margin-bottom: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .risk-badge {
+      flex-shrink: 0;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      border-left: 3px solid var(--sprout-green);
+      margin-left: 0.5rem;
+    }
+
+    .timeline-phase {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .timeline-phase::before {
+      content: "";
+      position: absolute;
+      left: -2.4rem;
+      top: 0.25rem;
+      width: 12px;
+      height: 12px;
+      background: var(--sprout-green);
+      border-radius: 50%;
+      border: 3px solid var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .timeline-phase h4 {
+      margin-top: 0;
+      color: var(--sprout-green);
+    }
+
+    /* Open questions */
+    .question-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .question-list {
+      counter-reset: question;
+    }
+
+    .question-list li {
+      padding: 0.75rem 1rem;
+      background: var(--white);
+      border-radius: var(--radius);
+      margin-bottom: 0.5rem;
+      border-left: 4px solid var(--sprout-green);
+      counter-increment: question;
+      padding-left: 2.5rem;
+      position: relative;
+    }
+
+    .question-list li::before {
+      content: counter(question) ".";
+      position: absolute;
+      left: 1rem;
+      font-weight: 600;
+      color: var(--sprout-green);
+    }
+
+    /* Glossary */
+    dl {
+      background: var(--white);
+      padding: 1.25rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+    }
+
+    dt {
+      font-weight: 600;
+      color: var(--sprout-green);
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    dt:first-child {
+      margin-top: 0;
+    }
+
+    dd {
+      margin-left: 0;
+      color: var(--gray-700);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      border-top: 1px solid var(--gray-200);
+      background: var(--white);
+      margin-top: 2rem;
+      color: var(--gray-500);
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: var(--sprout-green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        padding-top: 100px;
+      }
+
+      .hero h1 {
+        font-size: 1.75rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .nav-inner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .rag-flow {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .rag-arrow {
+        transform: rotate(90deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <span class="nav-logo">🌱 Sprout Support Agent</span>
+      <div class="nav-links">
+        <a href="#summary">Summary</a>
+        <a href="#problem">Problem</a>
+        <a href="#features">Features</a>
+        <a href="#ai">AI</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#roadmap">Roadmap</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <span class="hero-badge">Draft — v1.0 MVP</span>
+      <h1>Sprout Support Agent</h1>
+      <p class="hero-subtitle">A Chrome sidebar extension that accelerates L4 support engineering with real-time EAB metrics, AI-powered ticket investigation, and instant process FAQs — all alongside Jira.</p>
+      <div class="hero-meta">
+        <span><strong>Date:</strong> Feb 13, 2026</span>
+        <span><strong>Status:</strong> Draft</span>
+        <span><strong>Stakeholders:</strong> Edwin / Jona / Gaby / Danica</span>
+        <span><strong>Platform:</strong> Chrome Sidebar (MV3)</span>
+        <span><strong>Stack:</strong> Vue 3 · Azure · Jira</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 1. Executive Summary -->
+    <section id="summary">
+      <h2>1. Executive Summary</h2>
+      <p>Sprout Support Agent is a Chrome sidebar extension (Chrome Side Panel API) built for L4 support engineers. It surfaces real-time EAB (Escalation, Advocacy, Bypass) metrics from the Customer Advocacy Tool (CA Tool), provides AI-powered ticket investigation using Azure OpenAI with RAG, and delivers instant access to process FAQs and quick tools — all without leaving the Jira ticket context.</p>
+      <p>The extension addresses critical pain points in L4 support workflows: fragmented tools, manual investigation overhead, and lack of intelligent assistance. By embedding support intelligence directly in the browser sidebar alongside Jira, Sprout reduces investigation time, increases workaround adoption, and empowers engineers with AI-driven insights.</p>
+    </section>
+
+    <!-- 2. Problem Statement -->
+    <section id="problem">
+      <h2>2. Problem Statement</h2>
+      <p>L4 support engineers face significant friction when resolving complex customer escalations. The following pain points drive the need for Sprout Support Agent:</p>
+      <div class="card-grid">
+        <div class="card-pain">
+          <h4>Fragmented Tool Landscape</h4>
+          <p>Engineers must context-switch between Jira, the CA Tool (Customer Advocacy Tool), internal wikis, and Slack — losing focus and time.</p>
+        </div>
+        <div class="card-pain">
+          <h4>Manual Investigation Overhead</h4>
+          <p>Finding related tickets, root causes, and historical workarounds requires manual search across multiple systems with no intelligent summarization.</p>
+        </div>
+        <div class="card-pain">
+          <h4>Process Knowledge Gaps</h4>
+          <p>New hires and even seasoned engineers struggle to locate up-to-date process documentation and escalation paths quickly.</p>
+        </div>
+        <div class="card-pain">
+          <h4>Reactive Metrics Visibility</h4>
+          <p>EAB metrics (Escalation, Advocacy, Bypass) are not readily available in-context when triaging tickets, leading to delayed awareness.</p>
+        </div>
+        <div class="card-pain">
+          <h4>Inconsistent Workaround Adoption</h4>
+          <p>Proven workarounds exist in historical tickets but are not surfaced at the right moment, resulting in redundant investigation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Goals & KPIs -->
+    <section>
+      <h2>3. Goals & KPIs</h2>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-value">−30%</div>
+          <div class="kpi-label">Investigation Time</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value">≥40%</div>
+          <div class="kpi-label">Workaround Adoption</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value">3/day</div>
+          <div class="kpi-label">FAQ Lookups</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value">≥60%</div>
+          <div class="kpi-label">AI Accuracy</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value">100%</div>
+          <div class="kpi-label">L4 Adoption</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Goal</th>
+            <th>KPI</th>
+            <th>Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Reduce time-to-resolution</td>
+            <td>Investigation time reduction</td>
+            <td>−30% vs baseline</td>
+          </tr>
+          <tr>
+            <td>Increase reuse of proven solutions</td>
+            <td>Workaround adoption rate</td>
+            <td>≥40%</td>
+          </tr>
+          <tr>
+            <td>Improve process adherence</td>
+            <td>FAQ lookups per engineer per day</td>
+            <td>≥3</td>
+          </tr>
+          <tr>
+            <td>Build trust in AI assistance</td>
+            <td>AI suggestion accuracy</td>
+            <td>≥60%</td>
+          </tr>
+          <tr>
+            <td>Ensure broad usage</td>
+            <td>L4 team adoption</td>
+            <td>100%</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 4. Target Users -->
+    <section>
+      <h2>4. Target Users</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Role</th>
+            <th>Primary Use Case</th>
+            <th>Key Needs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>L4 Support Engineer</td>
+            <td>Resolve escalations, investigate root causes, apply workarounds</td>
+            <td>In-context metrics, related tickets, AI investigation, process FAQs</td>
+          </tr>
+          <tr>
+            <td>Team Lead</td>
+            <td>Monitor team performance, triage workload, review escalations</td>
+            <td>EAB dashboard, ticket trends, escalation patterns</td>
+          </tr>
+          <tr>
+            <td>Customer Advocacy Analyst</td>
+            <td>Track advocacy metrics, identify bypass patterns, report on trends</td>
+            <td>CA Tool integration, metrics export, trend visibility</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 5. Technical Context -->
+    <section>
+      <h2>5. Technical Context</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Technology</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Extension Host</td>
+            <td>Chrome MV3 Side Panel API (sidebar, not popup)</td>
+          </tr>
+          <tr>
+            <td>Frontend</td>
+            <td>Vue 3</td>
+          </tr>
+          <tr>
+            <td>Backend / APIs</td>
+            <td>Azure Functions</td>
+          </tr>
+          <tr>
+            <td>AI / LLM</td>
+            <td>Azure OpenAI</td>
+          </tr>
+          <tr>
+            <td>Data Source</td>
+            <td>Jira REST API, CA Tool (Customer Advocacy Tool)</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6. Feature Requirements -->
+    <section id="features">
+      <h2>6. Feature Requirements</h2>
+
+      <h3>6.1 EAB Metrics Dashboard <span class="badge badge-p1">P1 Must Have</span></h3>
+      <p><strong>Owner:</strong> Edwin</p>
+      <p>Real-time EAB (Escalation, Advocacy, Bypass) metrics from the Customer Advocacy Tool, displayed in the sidebar for the current Jira context.</p>
+      <div class="card-grid">
+        <div class="card">
+          <h4>Live Metrics</h4>
+          <p>Display EAB counts and trends for the active ticket's product/account.</p>
+        </div>
+        <div class="card">
+          <h4>Contextual Filtering</h4>
+          <p>Auto-filter metrics based on Jira ticket project, component, or labels.</p>
+        </div>
+      </div>
+      <ul class="checklist">
+        <li>Metrics refresh when Jira ticket changes</li>
+        <li>Link to CA Tool for drill-down</li>
+        <li>Support for key EAB dimensions (escalation type, advocacy status, bypass reason)</li>
+      </ul>
+
+      <h3>6.2 Related Tickets & Investigation <span class="badge badge-p1">P1 Must Have</span></h3>
+      <p><strong>Owner:</strong> Jona</p>
+      <p>Surface related Jira tickets (duplicates, similar issues, same customer) with quick navigation.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Related by customer</td>
+            <td>Show other tickets from same account/org</td>
+          </tr>
+          <tr>
+            <td>Related by component/error</td>
+            <td>Match by Jira component, error code, or keywords</td>
+          </tr>
+          <tr>
+            <td>Duplicate detection</td>
+            <td>Flag potential duplicates with similarity score</td>
+          </tr>
+          <tr>
+            <td>Quick links</td>
+            <td>One-click open in Jira</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>6.3 Process FAQ & Quick Tools <span class="badge badge-p1">P1 Must Have</span></h3>
+      <p><strong>Owners:</strong> Gaby & Danica</p>
+      <p>Searchable process FAQs, escalation paths, and quick actions (e.g., create sub-ticket, add label).</p>
+      <div class="card-grid">
+        <div class="card">
+          <h4>FAQ Search</h4>
+          <p>Full-text search over curated process documentation with instant results.</p>
+        </div>
+        <div class="card">
+          <h4>Escalation Paths</h4>
+          <p>Step-by-step escalation flows by issue type and severity.</p>
+        </div>
+        <div class="card">
+          <h4>Quick Actions</h4>
+          <p>One-click Jira actions: add label, create sub-ticket, assign to queue.</p>
+        </div>
+      </div>
+
+      <!-- 6.4 AI-Powered Investigation - Purple accent -->
+      <div class="ai-section" id="ai">
+        <h3>6.4 AI-Powered Investigation <span class="badge badge-new">NEW</span></h3>
+        <p>Azure OpenAI–powered investigation assistant with RAG (Retrieval-Augmented Generation) to surface root causes, workarounds, and escalation recommendations from historical tickets and knowledge bases.</p>
+
+        <div class="ai-highlight">
+          <h4>4-Step RAG Flow</h4>
+          <div class="rag-flow">
+            <span class="rag-step">1. Query</span>
+            <span class="rag-arrow">→</span>
+            <span class="rag-step">2. Retrieve</span>
+            <span class="rag-arrow">→</span>
+            <span class="rag-step">3. Augment</span>
+            <span class="rag-arrow">→</span>
+            <span class="rag-step">4. Generate</span>
+          </div>
+          <p style="margin-bottom:0; font-size:0.9rem;">User question + ticket context → Vector search over indexed tickets/docs → Relevant chunks injected into prompt → Azure OpenAI generates response with citations</p>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Chat Interface</td>
+              <td>Natural language Q&A about the current ticket with conversation history</td>
+            </tr>
+            <tr>
+              <td>Root Cause Analysis</td>
+              <td>AI suggests likely root causes based on ticket content and similar resolved tickets</td>
+            </tr>
+            <tr>
+              <td>Workaround Suggestions</td>
+              <td>Surface proven workarounds from historical tickets with confidence scores</td>
+            </tr>
+            <tr>
+              <td>Historical Pattern Matching</td>
+              <td>Identify recurring patterns (same error, same customer, same component)</td>
+            </tr>
+            <tr>
+              <td>Escalation Recommendation</td>
+              <td>Suggest when and how to escalate based on ticket signals</td>
+            </tr>
+            <tr>
+              <td>Context-Aware Follow-ups</td>
+              <td>AI proposes next questions or actions based on current investigation state</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h4>Acceptance Criteria</h4>
+        <ul class="checklist">
+          <li>Chat loads ticket context (summary, description, comments) automatically</li>
+          <li>Responses include citations to source tickets or docs when available</li>
+          <li>Response latency &lt; 5 seconds for typical queries</li>
+          <li>Fallback to "no results" when RAG returns no relevant chunks</li>
+          <li>User can provide feedback (thumbs up/down) on AI responses</li>
+        </ul>
+
+        <h4>Technical Implementation</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Technology</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>LLM</td>
+              <td>Azure OpenAI (GPT-4 or GPT-4o)</td>
+            </tr>
+            <tr>
+              <td>Vector Search</td>
+              <td>Azure Cognitive Search (vector index)</td>
+            </tr>
+            <tr>
+              <td>RAG Pipeline</td>
+              <td>Azure Functions: query → embed → search → prompt → completion</td>
+            </tr>
+            <tr>
+              <td>Embeddings</td>
+              <td>Azure OpenAI text-embedding-ada-002 or similar</td>
+            </tr>
+            <tr>
+              <td>Indexing</td>
+              <td>Batch job to index resolved tickets and process docs into vector store</td>
+            </tr>
+            <tr>
+              <td>Guardrails</td>
+              <td>Input/output filters, PII redaction, rate limiting</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 7. Information Architecture -->
+    <section>
+      <h2>7. Information Architecture</h2>
+      <div class="tree">
+        Sprout Support Agent (Sidebar)
+        <div class="tree-item">Tab 1: EAB Metrics</div>
+        <div class="tree-item">Tab 2: Related Tickets</div>
+        <div class="tree-item new">Tab 3: AI Investigate <span class="badge badge-new">NEW</span></div>
+        <div class="tree-item">Tab 4: Process FAQ</div>
+        <div class="tree-item">Tab 5: Quick Tools</div>
+      </div>
+    </section>
+
+    <!-- 8. Technical Architecture -->
+    <section id="architecture">
+      <h2>8. Technical Architecture</h2>
+      <div class="ascii-diagram">
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        Chrome Extension (Side Panel)                         │
+│                              Vue 3 Frontend                                  │
+└───────────────────────────────┬─────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         Sprout Data Services (DS)                            │
+│                    Azure Functions · API Gateway                             │
+└───┬─────────────────────────────┬─────────────────────────────┬─────────────┘
+    │                             │                             │
+    ▼                             ▼                             ▼
+┌───────────────┐    ┌───────────────────────┐    ┌───────────────────────────┐
+│  Jira Page    │    │  Azure Functions      │    │  Azure OpenAI             │
+│  (Content     │    │  → Jira REST API      │    │  → Completions            │
+│   Script)     │    │  → CA Tool APIs       │    │  → Embeddings             │
+└───────────────┘    └───────────┬───────────┘    └───────────┬───────────────┘
+                                 │                            │
+                                 ▼                            ▼
+                    ┌────────────────────────┐    ┌───────────────────────────┐
+                    │  Azure Cognitive       │    │  RAG Pipeline             │
+                    │  Search (Vector Index) │◄───│  Query → Retrieve → Gen   │
+                    └────────────────────────┘    └───────────────────────────┘
+      </div>
+    </section>
+
+    <!-- 9. Data Flows -->
+    <section>
+      <h2>9. Data Flows</h2>
+      <div class="flow-card">
+        <h4>Flow 1: Metrics</h4>
+        <p>Sidebar → Sprout DS → CA Tool API → EAB metrics → Sidebar. Triggered on Jira ticket load or manual refresh.</p>
+      </div>
+      <div class="flow-card ai">
+        <h4>Flow 2: AI Investigation (RAG)</h4>
+        <p>User query + ticket context → Azure Functions → Embed query → Azure Cognitive Search (vector) → Retrieve top-k chunks → Build prompt → Azure OpenAI → Response + citations → Sidebar.</p>
+      </div>
+      <div class="flow-card">
+        <h4>Flow 3: FAQ</h4>
+        <p>Search term → Sprout DS → FAQ index (or Azure Cognitive Search) → Results → Sidebar. Cached for common queries.</p>
+      </div>
+    </section>
+
+    <!-- 10. Security & Compliance -->
+    <section>
+      <h2>10. Security & Compliance</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Requirements</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Authentication</td>
+            <td>OAuth 2.0 / SSO for Jira and internal APIs; token refresh in extension</td>
+          </tr>
+          <tr>
+            <td>Data in Transit</td>
+            <td>TLS 1.3 for all API calls</td>
+          </tr>
+          <tr>
+            <td>Data at Rest</td>
+            <td>Encrypted storage for cached data; no PII in extension local storage</td>
+          </tr>
+          <tr>
+            <td>AI Data Privacy</td>
+            <td>Ticket content sent to Azure OpenAI must comply with data residency; no training on customer data; audit logging</td>
+          </tr>
+          <tr>
+            <td>AI Guardrails</td>
+            <td>Input/output filters, PII redaction before LLM, rate limiting, abuse detection</td>
+          </tr>
+          <tr>
+            <td>Compliance</td>
+            <td>Adhere to internal security policies; SOC2 / ISO considerations for AI usage</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 11. Release Plan -->
+    <section id="roadmap">
+      <h2>11. Release Plan</h2>
+      <div class="timeline">
+        <div class="timeline-phase">
+          <h4>Phase 1: MVP (Weeks 1–4)</h4>
+          <p>EAB Metrics Dashboard, Related Tickets, Process FAQ & Quick Tools. Chrome Side Panel shell, Jira context detection, CA Tool integration.</p>
+        </div>
+        <div class="timeline-phase">
+          <h4>Phase 2: Intelligence (Weeks 5–8)</h4>
+          <p>AI-Powered Investigation: RAG pipeline, Azure OpenAI integration, vector index of historical tickets, chat UI, citations, feedback loop.</p>
+        </div>
+        <div class="timeline-phase">
+          <h4>Phase 3: Future Backlog</h4>
+          <p>Proactive alerts, team analytics, integration with Slack/Teams, mobile companion, advanced AI features (multi-turn reasoning, auto-summarization).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. Risks & Mitigations -->
+    <section>
+      <h2>12. Risks & Mitigations</h2>
+      <div class="risk-card">
+        <span class="risk-badge"><span class="badge badge-high">High</span></span>
+        <div>
+          <h4>AI Hallucination</h4>
+          <p>AI may generate incorrect or fabricated root causes or workarounds. Mitigation: RAG with citations; require human verification for critical suggestions; feedback loop to improve retrieval; guardrails and output validation.</p>
+        </div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-badge"><span class="badge badge-medium">Medium</span></span>
+        <div>
+          <h4>Azure OpenAI Provisioning</h4>
+          <p>Delays in Azure OpenAI capacity or approval. Mitigation: Early procurement; fallback to alternative models if needed.</p>
+        </div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-badge"><span class="badge badge-medium">Medium</span></span>
+        <div>
+          <h4>CA Tool API Stability</h4>
+          <p>CA Tool APIs may change or have rate limits. Mitigation: Abstract behind Sprout DS; caching; monitor and version API contracts.</p>
+        </div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-badge"><span class="badge badge-low">Low</span></span>
+        <div>
+          <h4>Chrome Side Panel Adoption</h4>
+          <p>Users may not discover or persist with sidebar. Mitigation: Onboarding prompts; default to open when on Jira; measure engagement.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. Open Questions -->
+    <section>
+      <h2>13. Open Questions</h2>
+      <ol class="question-list">
+        <li>Azure OpenAI provisioning: timeline and region for deployment?</li>
+        <li>Historical ticket count: how many resolved tickets to index for RAG (e.g., last 12 months)?</li>
+        <li>CA Tool API: formal contract and rate limits for EAB metrics?</li>
+        <li>FAQ content ownership: who maintains and approves process docs?</li>
+        <li>AI accuracy measurement: how to define and track the ≥60% KPI?</li>
+        <li>PII handling: which ticket fields must be redacted before sending to Azure OpenAI?</li>
+        <li>Chrome Web Store listing: internal vs public distribution?</li>
+      </ol>
+    </section>
+
+    <!-- 14. Appendix / Glossary -->
+    <section>
+      <h2>14. Appendix / Glossary</h2>
+      <dl>
+        <dt>RAG (Retrieval-Augmented Generation)</dt>
+        <dd>A technique that combines retrieval of relevant documents with LLM generation. The model is given retrieved context (e.g., similar tickets) to produce more accurate, grounded responses with citations.</dd>
+
+        <dt>Customer Advocacy (CA) Tool</dt>
+        <dd>Internal tool for tracking EAB (Escalation, Advocacy, Bypass) metrics. Used by Customer Advocacy Analysts and L4 engineers. Used for customer advocacy workflows.</dd>
+
+        <dt>EAB</dt>
+        <dd>Escalation, Advocacy, Bypass — key metrics tracked in the CA Tool for support operations.</dd>
+
+        <dt>L4 Support Engineer</dt>
+        <dd>Level 4 support engineer; handles complex escalations, root cause analysis, and customer advocacy cases.</dd>
+
+        <dt>Chrome Side Panel</dt>
+        <dd>Chrome MV3 API that allows extensions to render a persistent sidebar panel alongside web pages (e.g., Jira), as opposed to a popup.</dd>
+      </dl>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Sprout Support Agent PRD</strong> — February 2026</p>
+    <p><a href="#" target="_blank" rel="noopener">Sprout Design System</a></p>
+  </footer>
+</body>
+</html>
