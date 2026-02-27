@@ -1,11 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Investigate = ({ onCopy }) => {
-    const tickets = [
-        { key: 'EAB-1234', summary: 'SSO login fails after password reset', match: '92%', status: 'Resolved', p: 'P2', workaround: 'Clear browser cache and re-authenticate via IdP portal. If persistent, re-sync user attributes.' },
-        { key: 'EAB-1180', summary: 'SSO attribute mismatch causing auth loop', match: '85%', status: 'Resolved', p: 'P1', workaround: 'Verify SAML attributes mapping in Azure AD. Check NameID format matches expected value.' },
-        { key: 'EAB-1156', summary: 'User unable to access after SSO migration', match: '78%', status: 'In Progress', p: 'P2', workaround: null }
-    ];
+    const [searchTerm, setSearchTerm] = useState('');
+    const [results, setResults] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    // Initial mock data as fallback or empty state
+    const [hasSearched, setHasSearched] = useState(false);
+
+    const handleSearch = async (e) => {
+        if (e.key === 'Enter') {
+            setLoading(true);
+            setError(null);
+            setHasSearched(true);
+
+            try {
+                const { fetchTicketByKey, searchTickets } = await import('../services/jiraService');
+
+                let data = [];
+                const trimmedTerm = searchTerm.trim();
+
+                // Case-insensitive regex to catch eab-123 as well as EAB-123
+                if (/^[a-zA-Z]+-\d+$/.test(trimmedTerm)) {
+                    try {
+                        // fetchTicketByKey in services will now handle the .toUpperCase()
+                        const ticket = await fetchTicketByKey(trimmedTerm);
+                        if (ticket) {
+                            data = [ticket];
+                        }
+                    } catch (err) {
+                        console.warn('Fetch by key failed, trying search', err);
+                    }
+                }
+
+                // If no data yet (or not a key), try JQL search
+                if (data.length === 0) {
+                    // Normalize the part that targets the key to uppercase for Jira JQL
+                    const jql = `text ~ "${trimmedTerm}" OR key = "${trimmedTerm.toUpperCase()}" ORDER BY created DESC`;
+                    const searchRes = await searchTickets(jql);
+                    data = searchRes.issues || [];
+                }
+
+                setResults(data);
+            } catch (err) {
+                console.error("Search failed", err);
+                setError(err.message);
+                setResults([]);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
 
     const trends = [
         { rank: 1, name: 'SSO Authentication Issues', count: '17 tickets', pct: 85, color: 'green' },
@@ -16,15 +62,30 @@ const Investigate = ({ onCopy }) => {
     ];
 
     return (
-        <div className="sp-panel sp-panel--active" style={{ padding: '16px' }}>
+        <div className="sp-panel sp-panel--active">
             {/* Search */}
-            <div className="sp-search-bar">
+            <div className="sp-search-bar" style={{ marginBottom: '16px' }}>
                 <svg className="sp-search-bar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input className="sp-search-bar__input" type="text" placeholder="Search related tickets, keywords, or paste a ticket key..." />
+                <input
+                    className="sp-search-bar__input"
+                    type="text"
+                    placeholder="Search ticket key (EAB-123) or keywords..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onKeyDown={handleSearch}
+                />
             </div>
+
+            {loading && <div style={{ textAlign: 'center', padding: '20px', color: '#64748b' }}>Searching Jira...</div>}
+
+            {error && (
+                <div style={{ padding: '12px', background: '#fee2e2', color: '#dc2626', borderRadius: '6px', marginBottom: '16px', fontSize: '13px' }}>
+                    Error: {error}
+                </div>
+            )}
 
             {/* Escalation Advisor */}
             <div className="sp-advisor-card">
@@ -43,47 +104,45 @@ const Investigate = ({ onCopy }) => {
                 </div>
             </div>
 
-            {/* Related Tickets */}
-            <div className="sp-section-header">
-                <h3 className="sp-section-title">Related Tickets</h3>
-                <span className="sp-badge sp-badge--neutral">{tickets.length} found</span>
-            </div>
+            {/* Results */}
+            {!loading && !error && hasSearched && results.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '20px', color: '#64748b' }}>No tickets found.</div>
+            )}
 
-            <div className="sp-ticket-list">
-                {tickets.map(t => (
-                    <div key={t.key} className="sp-ticket-card">
-                        <div className="sp-ticket-card__header">
-                            <div className="sp-ticket-card__key-row">
-                                <span className="sp-badge sp-badge--primary">{t.key}</span>
-                                <span className="sp-similarity-badge">{t.match} match</span>
-                            </div>
-                            <div className="sp-ticket-card__meta">
-                                <span className={`sp-badge ${t.status === 'Resolved' ? 'sp-badge--success' : 'sp-badge--info'}`}>{t.status}</span>
-                                <span className="sp-badge sp-badge--warning-outline">{t.p}</span>
-                            </div>
+            {!loading && results.map(t => (
+                <div key={t.key} className="sp-ticket-card" style={{ marginBottom: '12px' }}>
+                    <div className="sp-ticket-card__header">
+                        <div className="sp-ticket-card__key-row">
+                            <span className="sp-badge sp-badge--primary">{t.key}</span>
                         </div>
-                        <p className="sp-ticket-card__summary">{t.summary}</p>
-                        {t.workaround ? (
-                            <div className="sp-ticket-card__workaround">
-                                <div className="sp-workaround-header">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-                                    <span>Workaround Available</span>
-                                </div>
-                                <p className="sp-workaround-text">{t.workaround}</p>
-                                <button className="sp-btn sp-btn--ghost sp-btn--sm" onClick={() => onCopy(t.workaround)}>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    Copy
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="sp-ticket-card__no-workaround">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
-                                <span>No workaround yet — investigation in progress</span>
-                            </div>
-                        )}
+                        <div className="sp-ticket-card__meta">
+                            <span className={`sp-badge ${t.fields?.status?.name === 'Done' || t.fields?.status?.name === 'Resolved' ? 'sp-badge--success' : 'sp-badge--info'}`}>
+                                {t.fields?.status?.name || 'Unknown'}
+                            </span>
+                            <span className="sp-badge sp-badge--warning-outline">{t.fields?.priority?.name || 'P?'}</span>
+                        </div>
                     </div>
-                ))}
-            </div>
+                    <p className="sp-ticket-card__summary">{t.fields?.summary}</p>
+
+                    {/* Workaround / Resolution Check */}
+                    {t.fields?.resolution ? (
+                        <div className="sp-ticket-card__workaround">
+                            <div className="sp-workaround-header">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                <span>Resolution</span>
+                            </div>
+                            <p className="sp-workaround-text">
+                                {t.fields?.resolution?.description || "See Jira for details."}
+                            </p>
+                        </div>
+                    ) : (
+                        <div className="sp-ticket-card__no-workaround">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                            <span>Open Ticket</span>
+                        </div>
+                    )}
+                </div>
+            ))}
 
             {/* Issue Trends */}
             <div className="sp-section-header" style={{ marginTop: '16px' }}>
@@ -108,3 +167,4 @@ const Investigate = ({ onCopy }) => {
 };
 
 export default Investigate;
+
