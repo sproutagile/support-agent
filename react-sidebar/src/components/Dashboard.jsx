@@ -37,7 +37,7 @@ const Dashboard = () => {
             const endDate = new Date().toISOString().split('T')[0];
             const startDate = new Date(Date.now() - parseInt(period) * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-            let url = `http://localhost:5000/api/metrics?startDate=${startDate}&endDate=${endDate}`;
+            let url = `http://localhost:5000/api/proxy/metrics?startDate=${startDate}&endDate=${endDate}`;
             if (priority !== 'all') url += `&priority=${priority}`;
             if (isManualRefresh) url += `&refresh=true`;
 

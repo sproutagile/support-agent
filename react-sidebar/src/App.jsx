@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { getCredentials } from './services/jiraService';
+import { mapN8nToAiMessage } from './utils/n8nMapper';
 import './App.css'
 
 // Import Components
@@ -43,7 +45,7 @@ function App() {
     setTimeout(() => setNotification({ message: '', visible: false }), 2500);
   };
 
-  const handleSendMessage = (content) => {
+  const handleSendMessage = async (content) => {
     if (!content.trim()) return;
 
     // Add user message
@@ -52,52 +54,46 @@ function App() {
     setAiInput('');
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const creds = await getCredentials().catch(() => ({}));
+
+      const response = await fetch('http://localhost:5000/api/proxy/investigate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-jira-domain': creds.domain || 'mock',
+          'x-jira-email': creds.email || 'mock@example.com',
+          'x-jira-token': creds.token || 'mock-token'
+        },
+        body: JSON.stringify({
+          message: content,
+          ticketContext: activeTicket,
+          timestamp: new Date().toISOString()
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Proxy error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Use the mapper to adapt n8n output to the component's expected format
+      const aiResponse = mapN8nToAiMessage(data);
+
+      setAiMessages(prev => [...prev, aiResponse]);
+    } catch (err) {
+      console.error('[App] AI Investigation failed:', err);
+      setAiMessages(prev => [...prev, {
+        role: 'assistant',
+        type: 'text',
+        content: "I'm having trouble reaching the investigation service. Please check if the backend is running and n8n is configured."
+      }]);
+    } finally {
       setIsTyping(false);
-      const response = generateAIResponse(content);
-      setAiMessages(prev => [...prev, response]);
-    }, 1500);
+    }
   };
 
-  const generateAIResponse = (query) => {
-    const q = query.toLowerCase();
-    if (q.includes('root cause') || q.includes('analyze')) {
-      return {
-        role: 'assistant',
-        type: 'analysis',
-        analysis: {
-          sections: [
-            {
-              title: 'Root Cause Analysis',
-              confidence: 'High confidence',
-              content: 'Based on analysis of 3 related tickets, this appears to be a SAML attribute mapping mismatch introduced during the IdP migration.',
-              evidence: ['EAB-1234', 'EAB-1180']
-            },
-            {
-              title: 'Suggested Workarounds',
-              items: [
-                { title: 'Update SAML NameID format', desc: 'Change format to emailAddress in Azure AD.', status: 'Resolved EAB-1234' },
-                { title: 'Re-sync user attributes', desc: 'Trigger a full attribute sync from the new IdP.', status: 'Resolved EAB-1180' }
-              ]
-            },
-            {
-              title: 'Escalation Recommendation',
-              recommendation: {
-                tag: 'Try workaround first',
-                text: 'Workaround #1 has resolved 2 similar tickets. Recommend trying the fix before escalating.'
-              }
-            }
-          ]
-        }
-      };
-    }
-    return {
-      role: 'assistant',
-      type: 'text',
-      content: `I found 4 related tickets in the EAB project. Most common resolution is clearing cached credentials.`
-    };
-  };
 
   const handleRefresh = (e) => {
     const btn = e.currentTarget;
