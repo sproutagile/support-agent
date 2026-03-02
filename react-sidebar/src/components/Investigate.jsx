@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { getCredentials } from '../services/jiraService';
+import { mapN8nToAdvisor } from '../utils/n8nMapper';
 
 const Investigate = ({ onCopy }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -8,6 +10,7 @@ const Investigate = ({ onCopy }) => {
 
     // Initial mock data as fallback or empty state
     const [hasSearched, setHasSearched] = useState(false);
+    const [advisorData, setAdvisorData] = useState(null);
 
     const handleSearch = async (e) => {
         if (e.key === 'Enter') {
@@ -16,37 +19,61 @@ const Investigate = ({ onCopy }) => {
             setHasSearched(true);
 
             try {
-                const { fetchTicketByKey, searchTickets } = await import('../services/jiraService');
+                const creds = await getCredentials().catch(() => ({}));
 
-                let data = [];
-                const trimmedTerm = searchTerm.trim();
+                const response = await fetch('http://localhost:5000/api/proxy/investigate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-jira-domain': creds.domain || 'mock',
+                        'x-jira-email': creds.email || 'mock@example.com',
+                        'x-jira-token': creds.token || 'mock-token'
+                    },
+                    body: JSON.stringify({
+                        type: 'search',
+                        query: searchTerm,
+                        ticketKey: searchTerm
+                    })
+                });
 
-                // Case-insensitive regex to catch eab-123 as well as EAB-123
-                if (/^[a-zA-Z]+-\d+$/.test(trimmedTerm)) {
-                    try {
-                        // fetchTicketByKey in services will now handle the .toUpperCase()
-                        const ticket = await fetchTicketByKey(trimmedTerm);
-                        if (ticket) {
-                            data = [ticket];
-                        }
-                    } catch (err) {
-                        console.warn('Fetch by key failed, trying search', err);
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    const errorMessage = errorData.error || `Error ${response.status}`;
+                    if (response.status === 404) {
+                        throw new Error("Investigation service (n8n) returned 404. Ensure your n8n workflow is active or 'Listening for test event'.");
                     }
+                    throw new Error(`Search service error: ${errorMessage}`);
                 }
 
-                // If no data yet (or not a key), try JQL search
-                if (data.length === 0) {
-                    // Normalize the part that targets the key to uppercase for Jira JQL
-                    const jql = `text ~ "${trimmedTerm}" OR key = "${trimmedTerm.toUpperCase()}" ORDER BY created DESC`;
-                    const searchRes = await searchTickets(jql);
-                    data = searchRes.issues || [];
+                const data = await response.json();
+
+                // Map the structured data to the Escalation Advisor UI
+                const advisor = mapN8nToAdvisor(data);
+                setAdvisorData(advisor);
+
+                // For the list view:
+                // 1. Check for 'issues' (full Jira objects)
+                // 2. Fallback to 'relatedTickets' (keys) as simple objects
+                let finalResults = [];
+                if (Array.isArray(data.issues)) {
+                    finalResults = data.issues;
+                } else if (Array.isArray(data.relatedTickets)) {
+                    finalResults = data.relatedTickets.map(key => ({
+                        key,
+                        fields: {
+                            summary: "Related ticket found by AI",
+                            status: { name: "Referenced" },
+                            priority: { name: "?" }
+                        }
+                    }));
                 }
 
-                setResults(data);
+                setResults(finalResults);
             } catch (err) {
                 console.error("Search failed", err);
                 setError(err.message);
                 setResults([]);
+                setAdvisorData(null);
             } finally {
                 setLoading(false);
             }
@@ -88,24 +115,36 @@ const Investigate = ({ onCopy }) => {
             )}
 
             {/* Escalation Advisor */}
-            <div className="sp-advisor-card">
+            <div className={`sp-advisor-card ${advisorData?.escalationBadge === 'High' ? 'sp-advisor-card--danger' : ''}`}>
                 <div className="sp-advisor-card__header">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
                     <span className="sp-advisor-card__title">Escalation Advisor</span>
+                    {advisorData?.confidenceBadge && (
+                        <span className="sp-badge sp-badge--neutral-outline" style={{ marginLeft: 'auto', fontSize: '10px' }}>
+                            {advisorData.confidenceBadge} confidence
+                        </span>
+                    )}
                 </div>
                 <div className="sp-advisor-card__body">
                     <div className="sp-advisor-confidence">
                         <span className="sp-advisor-confidence__label">Dev Assignment Need:</span>
-                        <span className="sp-badge sp-badge--warning">Medium</span>
+                        <span className={`sp-badge ${advisorData?.escalationBadge === 'High' ? 'sp-badge--danger' : 'sp-badge--warning'}`}>
+                            {advisorData?.escalationBadge || 'Low'}
+                        </span>
                     </div>
                     <p className="sp-advisor-card__text">
-                        2 similar tickets found with workarounds. Consider trying known resolution before escalating to dev.
+                        {advisorData?.message || 'Search for a ticket to see analysis and similar resolutions.'}
                     </p>
+                    {advisorData?.relatedCount > 0 && (
+                        <div style={{ marginTop: '8px', fontSize: '11px', color: '#64748b' }}>
+                            Found <strong>{advisorData.relatedCount}</strong> related technical cases.
+                        </div>
+                    )}
                 </div>
             </div>
 
             {/* Results */}
-            {!loading && !error && hasSearched && results.length === 0 && (
+            {!loading && !error && hasSearched && results.length === 0 && !advisorData && (
                 <div style={{ textAlign: 'center', padding: '20px', color: '#64748b' }}>No tickets found.</div>
             )}
 

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
@@ -16,11 +17,11 @@ app.use((req, res, next) => {
 
 // --- Routes ---
 const healthRoutes = require('./src/routes/health.route');
-const metricsRoutes = require('./src/routes/metrics.route');
+const proxyRoutes = require('./src/routes/proxy.route');
 
 // Use the routes
 app.use('/api/health', healthRoutes);
-app.use('/api/metrics', metricsRoutes);
+app.use('/api/proxy', proxyRoutes);
 
 // Catch-all 404 handler (returns JSON instead of HTML)
 app.use((req, res) => {
@@ -29,15 +30,9 @@ app.use((req, res) => {
 });
 
 // --- Start Server ---
-const VERSION = "1.1.0-robust-metrics";
+const VERSION = "2.0.0-n8n-proxy";
 app.listen(PORT, async () => {
-    console.log(`🚀 Sprout Support Backend v1.1.0-robust-metrics running on http://localhost:${PORT}`);
+    console.log(`🚀 Sprout Support Backend v${VERSION} running on http://localhost:${PORT}`);
     console.log(`Health check: http://localhost:${PORT}/api/health`);
-
-    // Diagnostic log to help debug Jira JQL issues
-    try {
-        console.log('[Diagnostic] Checking Jira configuration...');
-        // We can't easily get credentials here without a request, but we can log a reminder
-        console.log('[Diagnostic] Will log field/project availability on first metrics request.');
-    } catch (e) { }
+    console.log(`Proxy status: http://localhost:${PORT}/api/proxy/status`);
 });
