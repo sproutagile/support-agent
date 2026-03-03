@@ -18,10 +18,12 @@ app.use((req, res, next) => {
 // --- Routes ---
 const healthRoutes = require('./src/routes/health.route');
 const proxyRoutes = require('./src/routes/proxy.route');
+const dashboardRoutes = require('./src/routes/dashboard.route');
 
 // Use the routes
 app.use('/api/health', healthRoutes);
 app.use('/api/proxy', proxyRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Catch-all 404 handler (returns JSON instead of HTML)
 app.use((req, res) => {

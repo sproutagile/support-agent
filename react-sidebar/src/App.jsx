@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getCredentials } from './services/jiraService';
 import { mapN8nToAiMessage } from './utils/n8nMapper';
+import { formatPriority } from './utils/ticketUtils';
 import './App.css'
 
 // Import Components
@@ -23,7 +24,7 @@ function App() {
   const [ticket, setTicket] = useState({
     key: 'EAB-1542',
     summary: 'SSO login fails intermittently after IdP migration',
-    priority: 'P2'
+    priority: 'P2 (Urgent)'
   });
   const [aiMessages, setAiMessages] = useState([
     { role: 'assistant', type: 'text', content: "Hi! I'm your AI investigation assistant. I can help you analyze EAB tickets. Try asking me about the current ticket, or paste any EAB ticket key to analyze." }
@@ -126,7 +127,7 @@ function App() {
           <span className="sp-badge sp-badge--primary" id="ticketKey">{ticket.key}</span>
           <span className="sp-context-bar__summary" id="ticketSummary">{ticket.summary}</span>
         </div>
-        <span className="sp-badge sp-badge--warning" id="ticketPriority">{ticket.priority}</span>
+        <span className="sp-badge sp-badge--warning" id="ticketPriority">{formatPriority(ticket.priority)}</span>
       </div>
 
       <Tabs activeTab={activeTab} onTabChange={setActiveTab} />

@@ -59,3 +59,23 @@ export const hasTicketKey = (text) => {
     const keyPattern = new RegExp(`${PROJECT_KEY}-\\d+|\\b\\d{3,5}\\b`, 'i');
     return keyPattern.test(text);
 };
+/**
+ * Formats a priority key into the new descriptive label.
+ * @param {string} priority - E.g., "P1", "P2"
+ * @returns {string} E.g., "P1 (Very Urgent)"
+ */
+export const formatPriority = (priority) => {
+    if (!priority) return 'P?';
+    const clean = priority.toUpperCase();
+    const map = {
+        'P1': 'P1 (Very Urgent)',
+        'P2': 'P2 (Urgent)',
+        'P3': 'P3 (Standard)',
+        'P4': 'P4 (Low)',
+        'CRITICAL': 'P1 (Very Urgent)',
+        'HIGH': 'P2 (Urgent)',
+        'MEDIUM': 'P3 (Standard)',
+        'LOW': 'P4 (Low)'
+    };
+    return map[clean] || map[clean.split(' ')[0]] || priority;
+};

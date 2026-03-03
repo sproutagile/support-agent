@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { getCredentials } from '../services/jiraService';
 import { mapN8nToAdvisor } from '../utils/n8nMapper';
+import { formatPriority } from '../utils/ticketUtils';
 
 const Investigate = ({ onCopy }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -158,7 +159,7 @@ const Investigate = ({ onCopy }) => {
                             <span className={`sp-badge ${t.fields?.status?.name === 'Done' || t.fields?.status?.name === 'Resolved' ? 'sp-badge--success' : 'sp-badge--info'}`}>
                                 {t.fields?.status?.name || 'Unknown'}
                             </span>
-                            <span className="sp-badge sp-badge--warning-outline">{t.fields?.priority?.name || 'P?'}</span>
+                            <span className="sp-badge sp-badge--warning-outline">{formatPriority(t.fields?.priority?.name)}</span>
                         </div>
                     </div>
                     <p className="sp-ticket-card__summary">{t.fields?.summary}</p>
