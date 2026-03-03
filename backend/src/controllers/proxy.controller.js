@@ -29,13 +29,13 @@ const forwardToN8n = async (req, res) => {
 
         console.log(`[ProxyController] n8n responded with status ${response.status}`);
 
-        // n8n often returns an array [ { ... } ], unwrap it if it's a single item
+        // Log raw data for debugging (helpful for the user to see in terminal)
         const responseData = response.data;
-        const finalData = Array.isArray(responseData) && responseData.length === 1
-            ? responseData[0]
-            : responseData;
+        console.log('[ProxyController] Raw data from n8n:', JSON.stringify(responseData).substring(0, 500) + (JSON.stringify(responseData).length > 500 ? '...' : ''));
 
-        return res.status(response.status).json(finalData);
+        // Always return the raw data received from n8n to the frontend.
+        // The frontend will handle parsing arrays vs objects.
+        return res.status(response.status).json(responseData);
 
     } catch (error) {
         if (error.response) {
