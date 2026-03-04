@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { formatPriority } from '../utils/ticketUtils';
 
-const Investigate = ({ onCopy }) => {
+const Investigate = ({ activeTicket, onCopy }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -22,7 +22,8 @@ const Investigate = ({ onCopy }) => {
                     body: JSON.stringify({
                         type: 'search',
                         query: searchTerm,
-                        ticketKey: searchTerm
+                        ticketContext: activeTicket,
+                        timestamp: new Date().toISOString()
                     })
                 });
 
