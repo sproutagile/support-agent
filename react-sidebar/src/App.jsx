@@ -21,7 +21,7 @@ function App() {
   const [showSsoPanel, setShowSsoPanel] = useState(false);
   const [openAccordion, setOpenAccordion] = useState(null);
   const [notification, setNotification] = useState({ message: '', visible: false });
-  const [ticket, setTicket] = useState({
+  const [activeTicket, setActiveTicket] = useState({
     key: 'EAB-1542',
     summary: 'SSO login fails intermittently after IdP migration',
     priority: 'P2 (Urgent)'
@@ -36,7 +36,7 @@ function App() {
   useEffect(() => {
     // Simulate initial ticket context detection
     setTimeout(() => {
-      showNotif(`Loaded context for ${ticket.key}`);
+      showNotif(`Loaded context for ${activeTicket.key}`);
     }, 800);
   }, []);
 
@@ -56,25 +56,22 @@ function App() {
     setIsTyping(true);
 
     try {
-      const creds = await getCredentials().catch(() => ({}));
-
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/proxy/investigate`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'x-jira-domain': creds.domain || 'mock',
-          'x-jira-email': creds.email || 'mock@example.com',
-          'x-jira-token': creds.token || 'mock-token'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          message: content,
+          type: 'chat',
+          query: content,
           ticketContext: activeTicket,
           timestamp: new Date().toISOString()
         })
       });
 
       if (!response.ok) {
-        throw new Error(`Proxy error: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Error ${response.status}`);
       }
 
       const data = await response.json();
@@ -88,7 +85,7 @@ function App() {
       setAiMessages(prev => [...prev, {
         role: 'assistant',
         type: 'text',
-        content: "I'm having trouble reaching the investigation service. Please check if the backend is running and n8n is configured."
+        content: `Investigation issue: ${err.message}. Please check if n8n is responding correctly to "${content}".`
       }]);
     } finally {
       setIsTyping(false);
@@ -124,17 +121,17 @@ function App() {
       {/* Jira Context Bar */}
       <div className="sp-context-bar" id="contextBar">
         <div className="sp-context-bar__ticket">
-          <span className="sp-badge sp-badge--primary" id="ticketKey">{ticket.key}</span>
-          <span className="sp-context-bar__summary" id="ticketSummary">{ticket.summary}</span>
+          <span className="sp-badge sp-badge--primary" id="ticketKey">{activeTicket.key}</span>
+          <span className="sp-context-bar__summary" id="ticketSummary">{activeTicket.summary}</span>
         </div>
-        <span className="sp-badge sp-badge--warning" id="ticketPriority">{formatPriority(ticket.priority)}</span>
+        <span className="sp-badge sp-badge--warning" id="ticketPriority">{formatPriority(activeTicket.priority)}</span>
       </div>
 
       <Tabs activeTab={activeTab} onTabChange={setActiveTab} />
 
       <main className="sp-main">
         {activeTab === 'dashboard' && <Dashboard />}
-        {activeTab === 'investigate' && <Investigate onCopy={handleCopy} />}
+        {activeTab === 'investigate' && <Investigate activeTicket={activeTicket} onCopy={handleCopy} />}
         {activeTab === 'ai' && (
           <AIChat
             messages={aiMessages}
@@ -142,6 +139,7 @@ function App() {
             inputValue={aiInput}
             onInputChange={setAiInput}
             onSendMessage={handleSendMessage}
+            activeTicket={activeTicket}
           />
         )}
         {activeTab === 'faq' && (

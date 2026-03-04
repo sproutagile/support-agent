@@ -9,14 +9,54 @@
  * @returns {Object} A structured message object for AIChat.
  */
 export const mapN8nToAiMessage = (n8nData) => {
-    if (!n8nData || !n8nData.steps) {
+    let tickets = [];
+    const query = (Array.isArray(n8nData) && n8nData.length > 0 ? n8nData[0].query : n8nData?.query) || '';
+
+    // Robust recursive crawler (mirrors Investigate.jsx logic)
+    const findTickets = (obj) => {
+        if (Array.isArray(obj)) {
+            obj.forEach(findTickets);
+        } else if (obj && typeof obj === 'object') {
+            // Handle "columnar" structure
+            if (Array.isArray(obj.Key)) {
+                obj.Key.forEach((k, i) => {
+                    const ticket = {};
+                    Object.keys(obj).forEach(field => {
+                        ticket[field] = Array.isArray(obj[field]) ? obj[field][i] : obj[field];
+                    });
+                    tickets.push(ticket);
+                });
+            } else if (obj.Key || obj.key) {
+                tickets.push(obj);
+            } else {
+                Object.values(obj).forEach(val => {
+                    if (val && typeof val === 'object') findTickets(val);
+                });
+            }
+        }
+    };
+
+    findTickets(n8nData);
+
+    if (tickets.length > 0 || query) {
         return {
             role: 'assistant',
-            type: 'text',
-            content: typeof n8nData === 'string' ? n8nData : "I couldn't analyze this ticket. Please try again."
+            type: 'ticket-results',
+            query: query,
+            tickets: tickets
         };
     }
 
+    // Fallback for the old 'analysis' format or plain text
+    if (!data || !data.steps) {
+        return {
+            role: 'assistant',
+            type: 'text',
+            content: typeof data === 'string' ? data : (data?.message || "I couldn't analyze this ticket. Please try again.")
+        };
+    }
+
+    // ... rest of the existing analysis mapping logic if still needed as fallback
     return {
         role: 'assistant',
         type: 'analysis',
@@ -24,13 +64,13 @@ export const mapN8nToAiMessage = (n8nData) => {
             sections: [
                 {
                     title: 'Root Cause Analysis',
-                    confidence: n8nData.confidence ? `${n8nData.confidence.charAt(0).toUpperCase() + n8nData.confidence.slice(1)} confidence` : 'Unknown confidence',
-                    content: n8nData.steps[0] || 'Investigation in progress.',
-                    evidence: n8nData.relatedTickets || []
+                    confidence: data.confidence ? `${data.confidence.charAt(0).toUpperCase() + data.confidence.slice(1)} confidence` : 'Unknown confidence',
+                    content: data.steps[0] || 'Investigation in progress.',
+                    evidence: data.relatedTickets || []
                 },
                 {
                     title: 'Suggested Workarounds',
-                    items: n8nData.steps.slice(1).map((step, idx) => ({
+                    items: data.steps.slice(1).map((step, idx) => ({
                         title: `Step ${idx + 2}`,
                         desc: step
                     }))
@@ -38,8 +78,8 @@ export const mapN8nToAiMessage = (n8nData) => {
                 {
                     title: 'Escalation Recommendation',
                     recommendation: {
-                        tag: n8nData.escalationRequired ? 'Escalation Recommended' : 'Try workaround first',
-                        text: n8nData.escalationRequired
+                        tag: data.escalationRequired ? 'Escalation Recommended' : 'Try workaround first',
+                        text: data.escalationRequired
                             ? 'Technical analysis suggests this issue requires developer intervention.'
                             : 'Historical data shows similar cases were resolved using the steps above.'
                     }

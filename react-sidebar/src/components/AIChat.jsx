@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
+import { formatPriority } from '../utils/ticketUtils';
 
-const AIChat = ({ messages, isTyping, inputValue, onInputChange, onSendMessage }) => {
+const AIChat = ({ messages, isTyping, inputValue, onInputChange, onSendMessage, activeTicket }) => {
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
@@ -24,6 +25,55 @@ const AIChat = ({ messages, isTyping, inputValue, onInputChange, onSendMessage }
                                 {msg.role === 'assistant' && <div className="sp-ai-msg__name" style={{ fontSize: '11px', fontWeight: '600', color: '#8b5cf6', marginBottom: '4px' }}>Sprout AI</div>}
                                 {msg.type === 'html' ? (
                                     <div className="sp-ai-msg__text" style={{ fontSize: '13px', lineHeight: '1.5' }} dangerouslySetInnerHTML={{ __html: msg.content }} />
+                                ) : msg.type === 'ticket-results' ? (
+                                    <div className="sp-ai-msg__text">
+                                        <p style={{ fontSize: '13px', marginBottom: '16px', color: '#475569', lineHeight: '1.5' }}>
+                                            {msg.tickets && msg.tickets.length > 0
+                                                ? `Based on your issue${msg.query ? ` of "${msg.query}"` : ''}, here are the related cases and workarounds:`
+                                                : `Based on your issue${msg.query ? ` of "${msg.query}"` : ''}, no related cases were found.`}
+                                        </p>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                            {msg.tickets.map((t, tIdx) => {
+                                                const key = t.Key || t.key || `Case-${tIdx}`;
+                                                const summary = t.Summary || t.summary || '';
+                                                const status = t.Status || t.fields?.status?.name || 'Unknown';
+                                                const priority = t.Priority || t.fields?.priority?.name || 'P3';
+                                                const workaround = t.Workaround || t.fields?.resolution?.description || "No workaround documented.";
+
+                                                return (
+                                                    <div key={tIdx} style={{
+                                                        padding: '16px',
+                                                        background: '#f8fafc',
+                                                        borderRadius: '10px',
+                                                        border: '1px solid #e2e8f0',
+                                                        borderLeft: '4px solid #8b5cf6',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        gap: '8px'
+                                                    }}>
+                                                        <div style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b' }}>
+                                                            {key}{summary ? `: ${summary}` : ''}
+                                                        </div>
+
+                                                        <div style={{ display: 'flex', gap: '6px' }}>
+                                                            <span className="sp-badge sp-badge--warning-outline" style={{ fontSize: '10px', padding: '2px 8px' }}>
+                                                                {formatPriority(priority)}
+                                                            </span>
+                                                            <span className={`sp-badge ${status === 'Done' || status === 'Resolved' ? 'sp-badge--success' : 'sp-badge--info'}`} style={{ fontSize: '10px', padding: '2px 8px' }}>
+                                                                {status}
+                                                            </span>
+                                                        </div>
+
+                                                        <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '8px', marginTop: '4px' }}>
+                                                            <p style={{ fontSize: '12.5px', color: '#475569', lineHeight: '1.5', margin: 0, whiteSpace: 'pre-wrap' }}>
+                                                                {workaround}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
                                 ) : msg.type === 'analysis' ? (
                                     <div className="sp-ai-msg__text">
                                         <div className="sp-ai-analysis">
@@ -69,9 +119,9 @@ const AIChat = ({ messages, isTyping, inputValue, onInputChange, onSendMessage }
 
                                 {msg.role === 'assistant' && idx === 0 && (
                                     <div className="sp-ai-quick-actions" style={{ marginTop: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage('Analyze current ticket')}>Analyze ticket</button>
-                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage('Root cause analysis')}>Root cause</button>
-                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage('Workaround summary')}>Workarounds</button>
+                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(activeTicket?.key)}>Analyze current ticket</button>
+                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(`Root cause analysis for ${activeTicket?.key}`)}>Root cause</button>
+                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(`Workaround summary for ${activeTicket?.key}`)}>Workarounds</button>
                                     </div>
                                 )}
                             </div>
