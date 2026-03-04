@@ -58,7 +58,7 @@ function App() {
     try {
       const creds = await getCredentials().catch(() => ({}));
 
-      const response = await fetch('http://localhost:5000/api/proxy/investigate', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/proxy/investigate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
