@@ -16,7 +16,7 @@ const Investigate = ({ onCopy }) => {
 
             try {
                 console.log(`[Investigate] Searching for: ${searchTerm}`);
-                const response = await fetch('http://localhost:5000/api/proxy/investigate', {
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/proxy/investigate`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -119,15 +119,18 @@ const Investigate = ({ onCopy }) => {
                 {!loading && results.map((t, idx) => {
                     try {
                         const key = (typeof t.Key === 'string' ? t.Key : null) || (typeof t.key === 'string' ? t.key : null) || `Case-${idx}`;
+                        const summary = (typeof t.Summary === 'string' ? t.Summary : null) || (typeof t.summary === 'string' ? t.summary : null) || '';
                         const status = (typeof t.Status === 'string' ? t.Status : null) || t.fields?.status?.name || 'Unknown';
                         const priority = (typeof t.Priority === 'string' ? t.Priority : null) || t.fields?.priority?.name || 'P3';
                         const workaround = (typeof t.Workaround === 'string' ? t.Workaround : null) || t.fields?.resolution?.description || "No workaround documented.";
 
                         return (
                             <div key={`${key}-${idx}`} className="sp-ticket-card" style={{ padding: '20px', background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' }}>
-                                {/* Head: Key */}
+                                {/* Head: Key & Summary */}
                                 <div style={{ marginBottom: '12px' }}>
-                                    <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#1e293b', margin: 0 }}>{key}</h3>
+                                    <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#1e293b', margin: 0 }}>
+                                        {key}{summary ? `: ${summary}` : ''}
+                                    </h3>
                                 </div>
 
                                 {/* Sub-header: Priority & Status side-by-side */}
