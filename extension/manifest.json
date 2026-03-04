@@ -13,10 +13,18 @@
       "16": "icons/icon16.png",
       "48": "icons/icon48.png"
     },
+<<<<<<< HEAD
     "default_title": "Open Sprout Support Agent"
   },
   "side_panel": {
     "default_path": "sidepanel.html"
+=======
+    "default_title": "Open Sprout Support Agent",
+    "default_popup": "dist/index.html"
+  },
+  "side_panel": {
+    "default_path": "dist/index.html"
+>>>>>>> 5f1e464ff60c5064841d3c453d762e2ae2b51080
   },
   "permissions": [
     "activeTab",
@@ -29,13 +37,29 @@
   ],
   "content_scripts": [
     {
+<<<<<<< HEAD
       "matches": ["https://*.atlassian.net/*"],
       "js": ["content-script.js"],
       "css": ["content-style.css"]
+=======
+      "matches": [
+        "https://*.atlassian.net/*"
+      ],
+      "js": [
+        "content-script.js"
+      ],
+      "css": [
+        "content-style.css"
+      ]
+>>>>>>> 5f1e464ff60c5064841d3c453d762e2ae2b51080
     }
   ],
   "background": {
     "service_worker": "background.js",
     "type": "module"
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5f1e464ff60c5064841d3c453d762e2ae2b51080
