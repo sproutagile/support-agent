@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getCredentials } from '../services/jiraService';
 
 
-const Dashboard = () => {
+const Dashboard = ({ refreshKey }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [metricsData, setMetricsData] = useState(null);
@@ -42,7 +42,7 @@ const Dashboard = () => {
         } finally {
             setLoading(false);
         }
-    }, [period, priority]);
+    }, [period, priority, refreshKey]);
 
     useEffect(() => {
         fetchMetrics();
