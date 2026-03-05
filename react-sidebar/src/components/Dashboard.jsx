@@ -133,62 +133,67 @@ const Dashboard = ({ refreshKey }) => {
                 <div style={{ padding: '24px 12px 16px' }}>
 
                     {/* Bar Chart Container */}
-                    <div style={{
-                        height: '140px',
-                        display: 'flex',
-                        alignItems: 'flex-end',
-                        gap: '6px',
-                        paddingBottom: '24px',
-                        position: 'relative',
-                        borderBottom: '1px solid #f1f5f9'
-                    }}>
-                        {metricsData?.resolvedTrend?.map((item, idx) => {
-                            const maxVal = Math.max(...(metricsData.resolvedTrend.map(t => t.value)), 1);
-                            const heightPercent = (item.value / maxVal) * 100;
+                    {(!metricsData?.resolvedTrend || metricsData.resolvedTrend.length === 0) ? (
+                        <div style={{ padding: '24px', textAlign: 'center', color: '#94a3b8', fontSize: '14px' }}>
+                            No trend data available
+                        </div>
+                    ) : (
+                        <div style={{
+                            height: '140px',
+                            display: 'flex',
+                            alignItems: 'flex-end',
+                            gap: '6px',
+                            paddingBottom: '24px',
+                            position: 'relative',
+                            borderBottom: '1px solid #f1f5f9'
+                        }}>
+                            {metricsData.resolvedTrend.map((item, idx) => {
+                                const maxVal = Math.max(...(metricsData.resolvedTrend.map(t => t.value)), 1);
+                                const heightPercent = (item.value / maxVal) * 100;
 
-                            return (
-                                <div key={idx} style={{
-                                    flex: 1,
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    height: '100%',
-                                    justifyContent: 'flex-end'
-                                }}>
-                                    <div
-                                        style={{
-                                            width: '75%',
-                                            height: `${heightPercent}%`,
-                                            background: '#16a34a',
-                                            borderRadius: '3px 3px 0 0',
-                                            transition: 'height 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
-                                            minHeight: item.value > 0 ? '4px' : '0',
-                                            opacity: 0.85,
-                                            boxShadow: '0 2px 6px rgba(22, 163, 74, 0.15)'
-                                        }}
-                                        title={`${item.label}: ${item.value} resolved`}
-                                    />
-                                    <span style={{
-                                        fontSize: '8px',
-                                        color: '#64748b',
-                                        position: 'absolute',
-                                        bottom: '4px',
-                                        whiteSpace: 'nowrap',
-                                        fontWeight: '500',
-                                        transform: 'scale(0.95)'
+                                return (
+                                    <div key={idx} style={{
+                                        flex: 1,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        height: '100%',
+                                        justifyContent: 'flex-end'
                                     }}>
-                                        {item.label}
-                                    </span>
-                                </div>
-                            );
-                        })}
-                    </div>
+                                        <div
+                                            style={{
+                                                width: '75%',
+                                                height: `${heightPercent}%`,
+                                                background: '#16a34a',
+                                                borderRadius: '3px 3px 0 0',
+                                                transition: 'height 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+                                                minHeight: item.value > 0 ? '4px' : '0',
+                                                opacity: 0.85,
+                                                boxShadow: '0 2px 6px rgba(22, 163, 74, 0.15)'
+                                            }}
+                                            title={`${item.label}: ${item.value} resolved`}
+                                        />
+                                        <span style={{
+                                            fontSize: '8px',
+                                            color: '#64748b',
+                                            position: 'absolute',
+                                            bottom: '4px',
+                                            whiteSpace: 'nowrap',
+                                            fontWeight: '500',
+                                            transform: 'scale(0.95)'
+                                        }}>
+                                            {item.label}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
                 </div>
             </div>
 
             <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '11px', color: '#94a3b8' }}>
-                {isMock ? 'Demo Data' : 'Last updated'}: {metricsData?.lastUpdated ? new Date(metricsData.lastUpdated).toLocaleTimeString() : 'N/A'}
-                {isMock && <p style={{ fontSize: '10px', marginTop: '4px', color: '#cbd5e1' }}>Simulated trend for UI preview</p>}
+                Last updated: {metricsData?.lastUpdated ? new Date(metricsData.lastUpdated).toLocaleTimeString() : 'N/A'}
             </div>
         </div>
     );
