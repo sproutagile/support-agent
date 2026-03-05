@@ -117,11 +117,11 @@ const AIChat = ({ messages, isTyping, inputValue, onInputChange, onSendMessage, 
                                     <div className="sp-ai-msg__text" style={{ fontSize: '13px', lineHeight: '1.5' }}>{msg.content}</div>
                                 )}
 
-                                {msg.role === 'assistant' && idx === 0 && (
+                                {msg.role === 'assistant' && idx === 0 && activeTicket && (
                                     <div className="sp-ai-quick-actions" style={{ marginTop: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(activeTicket?.key)}>Analyze current ticket</button>
-                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(`Root cause analysis for ${activeTicket?.key}`)}>Root cause</button>
-                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(`Workaround summary for ${activeTicket?.key}`)}>Workarounds</button>
+                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(activeTicket.key)}>Analyze current ticket</button>
+                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(`Root cause analysis for ${activeTicket.key}`)}>Root cause</button>
+                                        <button className="sp-ai-quick-btn" style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '100px', border: '1px solid #e2e8f0', background: '#f8fafc', cursor: 'pointer' }} onClick={() => onSendMessage(`Workaround summary for ${activeTicket.key}`)}>Workarounds</button>
                                     </div>
                                 )}
                             </div>

@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import { formatPriority } from '../utils/ticketUtils';
 
-const Investigate = ({ activeTicket, onCopy }) => {
+const Investigate = ({ activeTicket, onCopy, refreshKey }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [hasSearched, setHasSearched] = useState(false);
+
+    React.useEffect(() => {
+        if (refreshKey > 0) {
+            setSearchTerm('');
+            setResults([]);
+            setError(null);
+            setHasSearched(false);
+        }
+    }, [refreshKey]);
 
     const handleSearch = async (e) => {
         if (e.key === 'Enter') {
