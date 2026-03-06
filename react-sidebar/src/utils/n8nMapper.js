@@ -9,6 +9,28 @@
  * @returns {Object} A structured message object for AIChat.
  */
 export const mapN8nToAiMessage = (n8nData) => {
+    const firstItem = Array.isArray(n8nData) ? n8nData[0] : n8nData;
+    const data = firstItem;
+
+    // 1. Detect and Handle Metric Responses (New Feature)
+    if (firstItem && firstItem.period_days !== undefined && firstItem.resolved_count !== undefined) {
+        const periodDays = firstItem.period_days;
+        const velocity = firstItem.velocity || 'N/A';
+        const leadTime = firstItem.lead_time || 0;
+        const cycleTime = firstItem.cycle_time || 0;
+        const resolvedCount = firstItem.resolved_count || 0;
+
+        return {
+            role: 'assistant',
+            type: 'html',
+            content: `These are the ticket metrics for the last ${periodDays} days:<br/><br/>
+<strong>Velocity:</strong> ${velocity}<br/>
+<strong>Lead Time:</strong> ${leadTime} days<br/>
+<strong>Cycle Time:</strong> ${cycleTime} days<br/>
+<strong>Resolved Ticket Count:</strong> ${resolvedCount}`
+        };
+    }
+
     let tickets = [];
     const query = (Array.isArray(n8nData) && n8nData.length > 0 ? n8nData[0].query : n8nData?.query) || '';
 
