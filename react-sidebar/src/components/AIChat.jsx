@@ -1,12 +1,31 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { formatPriority } from '../utils/ticketUtils';
 
 const AIChat = ({ messages, isTyping, inputValue, onInputChange, onSendMessage, activeTicket }) => {
     const messagesEndRef = useRef(null);
+    const [confirmModal, setConfirmModal] = useState({ isOpen: false, ticketKey: null, url: null });
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isTyping]);
+
+    const handleTicketClick = (ticketKey) => {
+        if (!ticketKey) return;
+        const upperKey = String(ticketKey).toUpperCase();
+        const url = `https://sprouthq.atlassian.net/browse/${upperKey}`;
+        setConfirmModal({ isOpen: true, ticketKey: upperKey, url });
+    };
+
+    const confirmRedirect = () => {
+        if (confirmModal.url) {
+            window.open(confirmModal.url, '_blank', 'noopener,noreferrer');
+        }
+        setConfirmModal({ isOpen: false, ticketKey: null, url: null });
+    };
+
+    const cancelRedirect = () => {
+        setConfirmModal({ isOpen: false, ticketKey: null, url: null });
+    };
 
     return (
         <div className="sp-panel sp-panel--active" style={{ display: 'flex', height: '100%', padding: 0 }}>
@@ -49,8 +68,9 @@ const AIChat = ({ messages, isTyping, inputValue, onInputChange, onSendMessage, 
                                                         borderLeft: '4px solid #8b5cf6',
                                                         display: 'flex',
                                                         flexDirection: 'column',
-                                                        gap: '8px'
-                                                    }}>
+                                                        gap: '8px',
+                                                        cursor: 'pointer'
+                                                    }} onClick={() => handleTicketClick(key)}>
                                                         <div style={{ fontSize: '14px', fontWeight: '700', color: '#1e293b' }}>
                                                             {key}{summary ? `: ${summary}` : ''}
                                                         </div>
@@ -165,6 +185,103 @@ const AIChat = ({ messages, isTyping, inputValue, onInputChange, onSendMessage, 
                     </div>
                 </div>
             </div>
+
+            {/* Confirmation Modal */}
+            {confirmModal.isOpen && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(15, 23, 42, 0.4)',
+                    backdropFilter: 'blur(4px)',
+                    zIndex: 9999,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    animation: 'fadeIn 0.2s ease-out'
+                }}>
+                    <div style={{
+                        background: 'white',
+                        borderRadius: '16px',
+                        padding: '24px',
+                        width: '85%',
+                        maxWidth: '320px',
+                        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        textAlign: 'center',
+                        gap: '16px',
+                        animation: 'scaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}>
+                        <div style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            background: '#f0fdf4',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#16a34a',
+                            marginBottom: '4px'
+                        }}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                        </div>
+
+                        <div>
+                            <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', fontWeight: '700', color: '#0f172a' }}>Open Jira Ticket</h3>
+                            <p style={{ margin: 0, fontSize: '14px', color: '#64748b', lineHeight: '1.5' }}>
+                                You are about to view <strong>{confirmModal.ticketKey}</strong> in Jira. Do you wish to proceed?
+                            </p>
+                        </div>
+
+                        <div style={{ display: 'flex', width: '100%', gap: '12px', marginTop: '8px' }}>
+                            <button
+                                onClick={cancelRedirect}
+                                style={{
+                                    flex: 1,
+                                    padding: '10px 0',
+                                    borderRadius: '8px',
+                                    border: '1px solid #e2e8f0',
+                                    background: 'white',
+                                    color: '#475569',
+                                    fontWeight: '600',
+                                    fontSize: '14px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s'
+                                }}
+                                onMouseOver={(e) => e.target.style.background = '#f8fafc'}
+                                onMouseOut={(e) => e.target.style.background = 'white'}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmRedirect}
+                                style={{
+                                    flex: 1,
+                                    padding: '10px 0',
+                                    borderRadius: '8px',
+                                    border: 'none',
+                                    background: '#16a34a',
+                                    color: 'white',
+                                    fontWeight: '600',
+                                    fontSize: '14px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.2s',
+                                    boxShadow: '0 4px 6px -1px rgba(22, 163, 74, 0.2)'
+                                }}
+                                onMouseOver={(e) => e.target.style.background = '#15803d'}
+                                onMouseOut={(e) => e.target.style.background = '#16a34a'}
+                            >
+                                Proceed
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
