@@ -10,7 +10,10 @@ const Header = ({ onRefresh }) => {
                     <circle cx="14" cy="11" r="2.5" fill="#fff" />
                 </svg>
                 <div>
-                    <h1 className="sp-header__title">Sprout Support Agent</h1>
+                    <h1 className="sp-header__title">
+                        Sprout Support Agent
+                        <span style={{ fontSize: '12px', color: '#94a3b8', fontWeight: '500', marginLeft: '8px' }}>V1.0</span>
+                    </h1>
                     <span className="sp-header__subtitle">Sprout L4 Engineering</span>
                 </div>
 
