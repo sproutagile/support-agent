@@ -8,7 +8,6 @@ import './App.css'
 import Header from './components/Header'
 import Tabs from './components/Tabs'
 import Dashboard from './components/Dashboard'
-import Investigate from './components/Investigate'
 import AIChat from './components/AIChat'
 import FAQ from './components/FAQ'
 import Toast from './components/Toast'
@@ -89,7 +88,7 @@ function App() {
       setAiMessages(prev => [...prev, {
         role: 'assistant',
         type: 'text',
-        content: `Investigation issue: ${err.message}. Please check if n8n is responding correctly to "${content}".`
+        content: `Investigation issue: ${err.message}. Please check if "${content}" exists or if n8n is running.`
       }]);
     } finally {
       setIsTyping(false);
@@ -116,12 +115,6 @@ function App() {
     setOpenAccordion(openAccordion === id ? null : id);
   };
 
-  const handleCopy = (text) => {
-    navigator.clipboard.writeText(text).then(() => {
-      showNotif('Copied to clipboard!');
-    });
-  };
-
   return (
     <div id="app">
       <Toast message={notification.message} visible={notification.visible} />
@@ -133,7 +126,6 @@ function App() {
 
       <main className="sp-main">
         {activeTab === 'dashboard' && <Dashboard refreshKey={refreshKey} />}
-        {activeTab === 'investigate' && <Investigate activeTicket={activeTicket} onCopy={handleCopy} refreshKey={refreshKey} />}
         {activeTab === 'ai' && (
           <AIChat
             messages={aiMessages}
